@@ -71,4 +71,6 @@ Thumbs.db
 *.dll
 *.exe
 
+# Other files and folders
 *.odt
+/original_materials
