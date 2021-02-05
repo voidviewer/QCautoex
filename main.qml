@@ -32,6 +32,7 @@ Window {
             id: revCounter
             x: 18
             anchors.verticalCenter: parent.verticalCenter
+            opacity: 1
 
             Timer {
                 id: rpmTimer
