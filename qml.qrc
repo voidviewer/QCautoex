@@ -2,6 +2,9 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>images/background.png</file>
-        <file>RevCounter.qml</file>
+        <file>CircularGauge.qml</file>
+        <file>DefaultButton.qml</file>
+        <file>DefaultCamera.qml</file>
+        <file>RearViewMirror.qml</file>
     </qresource>
 </RCC>

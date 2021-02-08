@@ -4,8 +4,7 @@ import QtQuick.Controls 2.15
 
 Window {
     id: window
-//    width: 1920
-//    height: 480
+    //flags: "FramelessWindowHint"
     maximumWidth: 1920
     maximumHeight: 480
     minimumWidth: 1920
@@ -14,22 +13,27 @@ Window {
     title: qsTr("QCautoex")
 
     Image {
-        id: backgroundImage
         source: "images/background.png"
         anchors.fill: parent
     }
 
-    Rectangle {
+    Rectangle {     // window border
+        width: window.width
+        height: window.height
+        color: "transparent"
+        border.width: 3
+        border.color: "Sienna"
+    }
+
+    Rectangle {     // main gadgets
         id: mainMeters
         height: parent.height
-        width: revCounter.width + speedoMeter.width + 24
+        width: revMeter.width + speedoMeter.width + 24
         color: "transparent"
-        //border.color: "white"
-        //border.width: 1
         anchors.centerIn: parent
 
-        RevCounter{
-            id: revCounter
+        CircularGauge {
+            id: revMeter
             x: 18
             anchors.verticalCenter: parent.verticalCenter
             opacity: 1
@@ -42,14 +46,14 @@ Window {
                 interval: 1
                 onTriggered: {
                     if (increasing) {
-                        if (revCounter.rpm < maxRpm) {
-                            revCounter.rpm += 25
+                        if (revMeter.needleRotation < maxRpm) {
+                            revMeter.needleRotation += 25
                         } else {
                             increasing = false
                         }
                     } else {
-                        if (revCounter.rpm > 0) {
-                            revCounter.rpm -= 25
+                        if (revMeter.needleRotation > 0) {
+                            revMeter.needleRotation -= 25
                         } else {
                             increasing = true
                         }
@@ -58,10 +62,10 @@ Window {
             }
         }
 
-        RevCounter{
+        CircularGauge {
             id: speedoMeter
-            anchors.verticalCenter: revCounter.verticalCenter
-            anchors.left: revCounter.right
+            anchors.verticalCenter: revMeter.verticalCenter
+            anchors.left: revMeter.right
 
             Timer {
                 id: speedTimer
@@ -71,14 +75,14 @@ Window {
                 interval: 1
                 onTriggered: {
                     if (increasing) {
-                        if (speedoMeter.rpm < maxRpm) {
-                            speedoMeter.rpm += 15
+                        if (speedoMeter.needleRotation < maxRpm) {
+                            speedoMeter.needleRotation += 15
                         } else {
                             increasing = false
                         }
                     } else {
-                        if (speedoMeter.rpm > 0) {
-                            speedoMeter.rpm -= 15
+                        if (speedoMeter.needleRotation > 0) {
+                            speedoMeter.needleRotation -= 15
                         } else {
                             increasing = true
                         }
@@ -88,13 +92,49 @@ Window {
         }
     }
 
-    Button {
-        text: "Start/Stop"
-        onClicked: {
-            revCounter.rpm = 0
-            rpmTimer.running = !rpmTimer.running
-            speedoMeter.rpm = 0
-            speedTimer.running = !speedTimer.running
+    Rectangle {
+        property int buttonSpacing: 8
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.margins: 8
+        height: startStopButton.height
+        width: startStopButton.width + quitButton.width + buttonSpacing
+        color: "transparent"
+
+        DefaultButton {
+            id: startStopButton
+            buttonText: "Start/Stop"
+            onClicked: {
+                //revMeter.needleRotation = 45
+                rpmTimer.running = !rpmTimer.running
+                //speedoMeter.needleRotation = 45
+                speedTimer.running = !speedTimer.running
+            }
         }
+        DefaultButton {
+            id: resetButton
+            buttonText: "Reset"
+            anchors.left: startStopButton.right
+            anchors.leftMargin: parent.buttonSpacing
+            onClicked: {
+                revMeter.needleRotation = 45
+                rpmTimer.running = false
+                speedoMeter.needleRotation = 45
+                speedTimer.running = false
+            }
+        }
+        DefaultButton {
+            id: quitButton
+            buttonText: "Quit"
+            anchors.left: resetButton.right
+            anchors.leftMargin: parent.buttonSpacing
+            onClicked: {
+                Qt.quit()
+            }
+        }
+    }
+
+    RearViewMirror {
+        visible: true
     }
 }

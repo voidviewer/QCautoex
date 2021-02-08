@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Shapes 1.15
 
 Item {
-    property int rpm: 45
+    property int needleRotation: 45
 
     id: root
     width: 400
@@ -34,7 +34,7 @@ Item {
         width: 7
         height: ((parent.height - 12) / 2) - 20
         color: "orange"
-        transform: Rotation { origin.x: 3.5; origin.y: 3.5; angle: 45 + (rpm / 30)}
+        transform: Rotation { origin.x: 3.5; origin.y: 3.5; angle: 45 + (needleRotation / 30)}
         Shape {
             width: 21; height: 21
             x: -6.5; y: -6.5
@@ -44,7 +44,7 @@ Item {
                 fillColor: "black"
                 startX: 0; startY: 0
                 PathLine { x: 21; y: 0 }
-                PathLine { x: 10.5; y: 21 }
+                PathLine { x: 10; y: 21 }
                 PathLine { x: 0.1; y: 0.1 }
             }
         }
