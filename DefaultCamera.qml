@@ -10,6 +10,8 @@ Item {
         //deviceId: "AC372"
         //deviceId: "OBS Virtual Camera"
 
+        //digitalZoom: 2.0
+
         imageProcessing.whiteBalanceMode: CameraImageProcessing.WhiteBalanceFlash
 
         exposure {
@@ -27,26 +29,28 @@ Item {
     }
 
     VideoOutput {
+        id: cameraOutput
         source: camera
         anchors.fill: parent
         focus : visible // to receive focus and capture key events when visible
+        fillMode: VideoOutput.PreserveAspectCrop
     }
 
     Image {
         id: photoPreview
     }
 
-    ListView {
-        anchors.fill: parent
+//    ListView {
+//        anchors.fill: parent
 
-        model: QtMultimedia.availableCameras
-        delegate: Text {
-            text: modelData.displayName
+//        model: QtMultimedia.availableCameras
+//        delegate: Text {
+//            text: modelData.displayName
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: camera.deviceId = modelData.deviceId
-            }
-        }
-    }
+//            MouseArea {
+//                anchors.fill: parent
+//                onClicked: camera.deviceId = modelData.deviceId
+//            }
+//        }
+//    }
 }

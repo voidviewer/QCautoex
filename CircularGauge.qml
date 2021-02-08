@@ -12,6 +12,7 @@ Item {
         id: revCircle
         width: parent.width - 12
         height: parent.height - 12
+        anchors.verticalCenter: parent.verticalCenter
         color: "transparent"
         border.color: "white"
         border.width: 7
