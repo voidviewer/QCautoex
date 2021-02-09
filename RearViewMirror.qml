@@ -4,7 +4,7 @@ import QtQuick.Window 2.15
 Window {
     title: qsTr("QCautoex - rearview mirror")
     id: mirror
-    //flags: "FramelessWindowHint"
+    flags: "FramelessWindowHint"
     maximumWidth: 500
     maximumHeight: 150
     minimumWidth: 500

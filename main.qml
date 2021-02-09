@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
-import QtQuick.Controls 2.15
+//import QtQuick.Controls 2.15
+import QtWebSockets 1.0
 
 Window {
     title: qsTr("QCautoex - dashboard")
@@ -26,33 +27,60 @@ Window {
         color: "transparent"
         border.width: 3
         border.color: "Sienna"
+
+        WebSocketServer {}
+
+        Text {
+            id: messageBox
+            text: qsTr("Click to send a message!")
+            color: "white"
+            x: 9; y: 9
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    socket.sendTextMessage(qsTr("Hello Server!"));
+                }
+            }
+        }
+
+        Rectangle {
+            x: 9; y: 48
+            WebSocketClient {
+                id: webSocketClient
+            }
+        }
     }
 
-//    Rectangle {   // rear-view mirror in dashboard
-//        id: mirrorRectangle
-//        width: 500
-//        height: 150
-//        //anchors.right: window.right
-//        x: window.width - 503
-//        y: 3
-//        color: "black"
-//        border.width: 3
-//        border.color: "grey"
+    Rectangle {   // rear-view mirror in dashboard
+        id: mirrorRectangle
+        width: 500
+        height: 150
+        //anchors.right: window.right
+        x: window.width - 503
+        y: 3
+        color: "black"
+        border.width: 3
+        border.color: "grey"
 
-//        DefaultCamera {
-//            id: mirrorCamera
-//            anchors.centerIn: mirrorRectangle
-//            width: mirrorRectangle.width - 6
-//            height: mirrorRectangle.height - 6
+        DefaultCamera {
+            id: mirrorCamera
+            anchors.centerIn: mirrorRectangle
+            width: mirrorRectangle.width - 6
+            height: mirrorRectangle.height - 6
+        }
+        Rectangle {
+            anchors.centerIn: mirrorRectangle
+            width: mirrorRectangle.width - 6
+            height: mirrorRectangle.height - 6
+            color: "black"
+            opacity: mirrorOpacity
+        }
+    }
+
+//        RearViewMirror {    // floating rear-view mirror
+//            visible: true
 //        }
-//        Rectangle {
-//            anchors.centerIn: mirrorRectangle
-//            width: mirrorRectangle.width - 6
-//            height: mirrorRectangle.height - 6
-//            color: "black"
-//            opacity: mirrorOpacity
-//        }
-//    }
 
     Rectangle {     // main gadgets
         id: mainMeters
@@ -121,61 +149,50 @@ Window {
         }
     }
 
-    Rectangle {
-        property int buttonSpacing: 8
+    Rectangle {     // control buttons
+        id: controlbuttons
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.margins: 8
-        height: startStopButton.height
-        width: startStopButton.width + quitButton.width + buttonSpacing
+        height: controlButtonsItem.buttonHeight
         color: "transparent"
 
-        DefaultButton {
-            id: startStopButton
-            buttonText: "Start/Stop"
-            onClicked: {
-                rpmTimer.running = !rpmTimer.running
-                speedTimer.running = !speedTimer.running
-            }
-        }
-        DefaultButton {
-            id: resetButton
-            buttonText: "Reset"
-            anchors.left: startStopButton.right
-            anchors.leftMargin: parent.buttonSpacing
-            onClicked: {
-                revMeter.needleRotation = 45
-                rpmTimer.running = false
-                speedoMeter.needleRotation = 45
-                speedTimer.running = false
-            }
-        }
-        DefaultButton {
-            id: frameModeButton
-            buttonText: "Toggle frame"
-            anchors.left: resetButton.right
-            anchors.leftMargin: parent.buttonSpacing
-            onClicked: {
-                if (window.flags != 2048) {
-                    window.flags = "FramelessWindowHint"
-                } else {
-                    window.flags = 1
-                }
-                console.log("window.flags: " + window.flags);
-            }
-        }
-        DefaultButton {
-            id: quitButton
-            buttonText: "Quit"
-            anchors.left: frameModeButton.right
-            anchors.leftMargin: parent.buttonSpacing
-            onClicked: {
-                Qt.quit()
-            }
+        ControlButtons {
+            id: controlButtonsItem
         }
     }
 
-    RearViewMirror {    // floating rear-view mirror
-        visible: true
+    function appendMessage(message) {
+        messageBox.text += "\n" + message
+    }
+
+    WebSocketServer {
+        id: server
+        listen: true
+        onClientConnected: {
+            webSocket.onTextMessageReceived.connect(function(message) {
+                appendMessage(qsTr("Server received message: %1").arg(message));
+                webSocket.sendTextMessage(qsTr("Hello Client!"));
+            });
+        }
+        onErrorStringChanged: {
+            appendMessage(qsTr("Server error: %1").arg(errorString));
+        }
+    }
+
+    WebSocket {
+        id: socket
+        //url: server.url
+        url: "ws://echo.websocket.org"
+        //url: "ws://localhost"
+        onTextMessageReceived: appendMessage(qsTr("Client received message: %1").arg(message))
+        onStatusChanged: {
+            if (socket.status == WebSocket.Error) {
+                appendMessage(qsTr("Client error: %1").arg(socket.errorString));
+                console.log("here");
+            } else if (socket.status == WebSocket.Closed) {
+                appendMessage(qsTr("Client socket closed."));
+            }
+        }
     }
 }
