@@ -54,6 +54,7 @@ import QtWebSockets 1.0
 Rectangle {
     property string serverUrl: server.url
 
+    id: serverRectangle
     width: 400
     height: 120
     Text {
@@ -70,26 +71,24 @@ Rectangle {
         listen: true
         onClientConnected: {
             webSocket.onTextMessageReceived.connect(function(message) {
-                appendMessage(qsTr("Server received message: %1").arg(message));
-                webSocket.sendTextMessage(qsTr("Hello Client!"));
+                appendMessage(qsTr(timeOfDay() + " Server received message: %1").arg(message));
+                webSocket.sendTextMessage(qsTr(timeOfDay() + " Server message."));
             });
         }
         onErrorStringChanged: {
-            appendMessage(qsTr("Server error: %1").arg(errorString));
+            appendMessage(qsTr(timeOfDay() + " Server error: %1").arg(errorString));
         }
     }
 
     WebSocket {
         id: socket
         url: server.url
-        onTextMessageReceived: appendMessage(qsTr("Client received message: %1").arg(message))
+        onTextMessageReceived: appendMessage(qsTr(timeOfDay() + " Server received message: %1").arg(message))
         onStatusChanged: {
             if (socket.status == WebSocket.Error) {
-                //var d = new(Date)
-                var t = Qt.formatTime(new(Date), "hh:mm:ss")
-                appendMessage(qsTr(t + " Client error: %1").arg(socket.errorString));
+                appendMessage(qsTr("Server error: %1").arg(socket.errorString));
             } else if (socket.status == WebSocket.Closed) {
-                appendMessage(qsTr("Client socket closed."));
+                appendMessage(qsTr("Server socket closed."));
             }
         }
         active: true
@@ -97,13 +96,13 @@ Rectangle {
 
     Text {
         id: messageBox
+        color: "green"
         text: qsTr("Click to send a message!")
-        anchors.fill: parent
 
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                socket.sendTextMessage(qsTr("Hello Server!"));
+                socket.sendTextMessage(qsTr(timeOfDay() + " Message from server."));
             }
         }
     }

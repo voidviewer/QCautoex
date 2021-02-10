@@ -12,7 +12,7 @@ Window {
     minimumWidth: 1920
     minimumHeight: 480
     visible: true
-    property string socketServerUrl: ""
+    //property string socketServerUrl: ""
     property real mirrorOpacity: 0.0
 
     Image {
@@ -139,14 +139,19 @@ Window {
         }
     }
 
-    SocketClient {
-        x: 9
-        y: 136
-    }
-
     SocketServer {
         id: socketServer
         x: 9
         y: 9
+    }
+
+    SocketClient {
+        id: socketClient
+        x: socketServer.width + 15
+        y: 9
+    }
+
+    function timeOfDay () {
+        return Qt.formatTime(new(Date), "hh:mm:ss.zzz")
     }
 }

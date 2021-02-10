@@ -62,51 +62,58 @@ Rectangle {
         id: socket
         //url: server.url
         url: socketServer.serverUrl
-        onTextMessageReceived: {
-            messageBox.text = messageBox.text + "\nReceived message: " + message
-        }
-        onStatusChanged: if (socket.status == WebSocket.Error) {
-                             console.log("Error: " + socket.errorString)
-                         } else if (socket.status == WebSocket.Open) {
-                             socket.sendTextMessage("Hello World")
-                         } else if (socket.status == WebSocket.Closed) {
-                             messageBox.text += "\nSocket closed"
-                         }
-        //active: false
         active: true
+        onTextMessageReceived: {
+            messageBox.text = messageBox.text + "\n" + timeOfDay() + " Client received message: " + message
+        }
+//        onStatusChanged: if (socket.status == WebSocket.Error) {
+//                             console.log("Client error: " + socket.errorString)
+//                         } else if (socket.status == WebSocket.Open) {
+//                             socket.sendTextMessage("Hello from client")
+//                         } else if (socket.status == WebSocket.Closed) {
+//                             messageBox.text += "\nClient socket closed"
+//                         }
     }
 
     WebSocket {
         id: secureWebSocket
         //url: server.url
         url: socketServer.serverUrl
-        onTextMessageReceived: {
-            messageBox.text = messageBox.text + "\nReceived secure message: " + message
-        }
-        onStatusChanged: if (secureWebSocket.status == WebSocket.Error) {
-                             console.log("Error: " + secureWebSocket.errorString)
-                         } else if (secureWebSocket.status == WebSocket.Open) {
-                             secureWebSocket.sendTextMessage("Hello Secure World")
-                         } else if (secureWebSocket.status == WebSocket.Closed) {
-                             messageBox.text += "\nSecure socket closed"
-                         }
-        //active: false
         active: true
+        onTextMessageReceived: {
+            messageBox.text = messageBox.text + "\n" + timeOfDay() + " Client received secure message: " + message
+        }
+//        onStatusChanged: if (secureWebSocket.status == WebSocket.Error) {
+//                             console.log("Client error: " + secureWebSocket.errorString)
+//                         } else if (secureWebSocket.status == WebSocket.Open) {
+//                             secureWebSocket.sendTextMessage("Secure hello from client")
+//                         } else if (secureWebSocket.status == WebSocket.Closed) {
+//                             messageBox.text += "\nClient secure socket closed"
+//                         }
     }
 
     Text {
         id: messageBox
+        color: "green"
         text: socket.status == WebSocket.Open ? qsTr("Sending...") : qsTr("Welcome!")
-        anchors.centerIn: parent
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            socket.active = !socket.active
-            secureWebSocket.active = !secureWebSocket.active;
-            console.log("socket.active: " + socket.active)
-            //Qt.quit();
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                //socket.active = true
+                socket.sendTextMessage("Hello from client too")
+                //secureWebSocket.active = true
+                socket.sendTextMessage("Secure hello from client too")
+            }
         }
     }
+
+//    MouseArea {
+//        anchors.fill: parent
+//        onClicked: {
+//            socket.active = !socket.active
+//            secureWebSocket.active = !secureWebSocket.active;
+//            //console.log("socket.active: " + socket.active)
+//            //Qt.quit();
+//        }
+//    }
 }
