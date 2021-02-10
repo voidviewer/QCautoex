@@ -1,9 +1,9 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 Kurt Pattyn <pattyn.kurt@gmail.com>.
+** Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Milian Wolff <milian.wolff@kdab.com>
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtWebSockets module of the Qt Toolkit.
+** This file is part of the QtWebSocket module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -47,58 +47,64 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 import QtQuick 2.0
 import QtWebSockets 1.0
 
 Rectangle {
-    width: 360
-    height: 360
+    property string serverUrl: server.url
+
+    width: 400
+    height: 120
+    Text {
+        text: qsTr("Socket server")
+        anchors.right: parent.right
+    }
+
+    function appendMessage(message) {
+        messageBox.text += "\n" + message
+    }
+
+    WebSocketServer {
+        id: server
+        listen: true
+        onClientConnected: {
+            webSocket.onTextMessageReceived.connect(function(message) {
+                appendMessage(qsTr("Server received message: %1").arg(message));
+                webSocket.sendTextMessage(qsTr("Hello Client!"));
+            });
+        }
+        onErrorStringChanged: {
+            appendMessage(qsTr("Server error: %1").arg(errorString));
+        }
+    }
 
     WebSocket {
         id: socket
-        url: "ws://echo.websocket.org"
-        //url: "ws://localhost"
-        onTextMessageReceived: {
-            messageBox.text = messageBox.text + "\nReceived message: " + message
+        url: server.url
+        onTextMessageReceived: appendMessage(qsTr("Client received message: %1").arg(message))
+        onStatusChanged: {
+            if (socket.status == WebSocket.Error) {
+                //var d = new(Date)
+                var t = Qt.formatTime(new(Date), "hh:mm:ss")
+                appendMessage(qsTr(t + " Client error: %1").arg(socket.errorString));
+            } else if (socket.status == WebSocket.Closed) {
+                appendMessage(qsTr("Client socket closed."));
+            }
         }
-        onStatusChanged: if (socket.status == WebSocket.Error) {
-                             console.log("Error: " + socket.errorString)
-                         } else if (socket.status == WebSocket.Open) {
-                             socket.sendTextMessage("Hello World")
-                         } else if (socket.status == WebSocket.Closed) {
-                             messageBox.text += "\nSocket closed"
-                         }
-        active: false
+        active: true
     }
 
-    WebSocket {
-        id: secureWebSocket
-        url: "wss://echo.websocket.org"
-        onTextMessageReceived: {
-            messageBox.text = messageBox.text + "\nReceived secure message: " + message
-        }
-        onStatusChanged: if (secureWebSocket.status == WebSocket.Error) {
-                             console.log("Error: " + secureWebSocket.errorString)
-                         } else if (secureWebSocket.status == WebSocket.Open) {
-                             secureWebSocket.sendTextMessage("Hello Secure World")
-                         } else if (secureWebSocket.status == WebSocket.Closed) {
-                             messageBox.text += "\nSecure socket closed"
-                         }
-        active: false
-    }
     Text {
         id: messageBox
-        text: socket.status == WebSocket.Open ? qsTr("Sending...") : qsTr("Welcome!")
-        anchors.centerIn: parent
-    }
-
-    MouseArea {
+        text: qsTr("Click to send a message!")
         anchors.fill: parent
-        onClicked: {
-            socket.active = !socket.active
-            //secureWebSocket.active = !secureWebSocket.active;
-            //Qt.quit();
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                socket.sendTextMessage(qsTr("Hello Server!"));
+            }
         }
     }
 }
-

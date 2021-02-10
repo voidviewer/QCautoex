@@ -6,7 +6,8 @@
         <file>DefaultButton.qml</file>
         <file>DefaultCamera.qml</file>
         <file>RearViewMirror.qml</file>
-        <file>WebSocketClient.qml</file>
+        <file>SocketClient.qml</file>
         <file>ControlButtons.qml</file>
+        <file>SocketServer.qml</file>
     </qresource>
 </RCC>

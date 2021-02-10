@@ -1,18 +1,18 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
-//import QtQuick.Controls 2.15
+import QtQuick.Controls 2.15
 import QtWebSockets 1.0
 
 Window {
     title: qsTr("QCautoex - dashboard")
     id: window
-    flags: "FramelessWindowHint"
+    //flags: "FramelessWindowHint"
     maximumWidth: 1920
     maximumHeight: 480
     minimumWidth: 1920
     minimumHeight: 480
     visible: true
-
+    property string socketServerUrl: ""
     property real mirrorOpacity: 0.0
 
     Image {
@@ -27,32 +27,9 @@ Window {
         color: "transparent"
         border.width: 3
         border.color: "Sienna"
-
-        WebSocketServer {}
-
-        Text {
-            id: messageBox
-            text: qsTr("Click to send a message!")
-            color: "white"
-            x: 9; y: 9
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    socket.sendTextMessage(qsTr("Hello Server!"));
-                }
-            }
-        }
-
-        Rectangle {
-            x: 9; y: 48
-            WebSocketClient {
-                id: webSocketClient
-            }
-        }
     }
 
-    Rectangle {   // rear-view mirror in dashboard
+    Rectangle {     // rear-view mirror in dashboard
         id: mirrorRectangle
         width: 500
         height: 150
@@ -78,9 +55,9 @@ Window {
         }
     }
 
-//        RearViewMirror {    // floating rear-view mirror
-//            visible: true
-//        }
+//    RearViewMirror {    // floating rear-view mirror
+//        visible: true
+//    }
 
     Rectangle {     // main gadgets
         id: mainMeters
@@ -162,37 +139,14 @@ Window {
         }
     }
 
-    function appendMessage(message) {
-        messageBox.text += "\n" + message
+    SocketClient {
+        x: 9
+        y: 136
     }
 
-    WebSocketServer {
-        id: server
-        listen: true
-        onClientConnected: {
-            webSocket.onTextMessageReceived.connect(function(message) {
-                appendMessage(qsTr("Server received message: %1").arg(message));
-                webSocket.sendTextMessage(qsTr("Hello Client!"));
-            });
-        }
-        onErrorStringChanged: {
-            appendMessage(qsTr("Server error: %1").arg(errorString));
-        }
-    }
-
-    WebSocket {
-        id: socket
-        //url: server.url
-        url: "ws://echo.websocket.org"
-        //url: "ws://localhost"
-        onTextMessageReceived: appendMessage(qsTr("Client received message: %1").arg(message))
-        onStatusChanged: {
-            if (socket.status == WebSocket.Error) {
-                appendMessage(qsTr("Client error: %1").arg(socket.errorString));
-                console.log("here");
-            } else if (socket.status == WebSocket.Closed) {
-                appendMessage(qsTr("Client socket closed."));
-            }
-        }
+    SocketServer {
+        id: socketServer
+        x: 9
+        y: 9
     }
 }
