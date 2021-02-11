@@ -83,6 +83,7 @@ Rectangle {
     WebSocket {
         id: socket
         url: server.url
+        active: true
         onTextMessageReceived: appendMessage(qsTr(timeOfDay() + " Server received message: %1").arg(message))
         onStatusChanged: {
             if (socket.status == WebSocket.Error) {
@@ -91,7 +92,6 @@ Rectangle {
                 appendMessage(qsTr("Server socket closed."));
             }
         }
-        active: true
     }
 
     Text {

@@ -25,3 +25,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 RC_ICONS = QCautoex.ico
+
+HEADERS +=

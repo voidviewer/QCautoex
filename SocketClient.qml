@@ -75,14 +75,14 @@ Rectangle {
 //                         }
     }
 
-    WebSocket {
-        id: secureWebSocket
-        //url: server.url
-        url: socketServer.serverUrl
-        active: true
-        onTextMessageReceived: {
-            messageBox.text = messageBox.text + "\n" + timeOfDay() + " Client received secure message: " + message
-        }
+//    WebSocket {
+//        id: secureWebSocket
+//        //url: server.url
+//        url: socketServer.serverUrl
+//        active: true
+//        onTextMessageReceived: {
+//            messageBox.text = messageBox.text + "\n" + timeOfDay() + " Client received secure message: " + message
+//        }
 //        onStatusChanged: if (secureWebSocket.status == WebSocket.Error) {
 //                             console.log("Client error: " + secureWebSocket.errorString)
 //                         } else if (secureWebSocket.status == WebSocket.Open) {
@@ -90,7 +90,7 @@ Rectangle {
 //                         } else if (secureWebSocket.status == WebSocket.Closed) {
 //                             messageBox.text += "\nClient secure socket closed"
 //                         }
-    }
+//    }
 
     Text {
         id: messageBox
@@ -99,10 +99,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                //socket.active = true
                 socket.sendTextMessage("Hello from client too")
-                //secureWebSocket.active = true
-                socket.sendTextMessage("Secure hello from client too")
             }
         }
     }
