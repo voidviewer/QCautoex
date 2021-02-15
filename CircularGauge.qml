@@ -3,13 +3,15 @@ import QtQuick.Shapes 1.15
 
 Item {
     property int needleRotation: 45
+    property string gaugeName: "*"
+    property real rotationFactor: 30.0
 
     id: root
     width: 400
     height: 400
 
     Rectangle {
-        id: revCircle
+        id: gaugeCircle
         width: parent.width - 12
         height: parent.height - 12
         anchors.verticalCenter: parent.verticalCenter
@@ -29,13 +31,14 @@ Item {
         }
     }
     Rectangle {
-        id: revNeedle
+        id: gaugeNeedle
         x: ((parent.width - 12) / 2) - 3.5
         y: ((parent.height - 12) / 2) - 3.5
         width: 7
         height: ((parent.height - 12) / 2) - 20
         color: "orange"
-        transform: Rotation { origin.x: 3.5; origin.y: 3.5; angle: 45 + (needleRotation / 30)}
+        //transform: Rotation { origin.x: 3.5; origin.y: 3.5; angle: 45 + (needleRotation / 30)}
+        transform: Rotation { origin.x: 3.5; origin.y: 3.5; angle: 45 + (needleRotation / rotationFactor)}
         Shape {
             width: 21; height: 21
             x: -6.5; y: -6.5
@@ -49,5 +52,15 @@ Item {
                 PathLine { x: 0.1; y: 0.1 }
             }
         }
+    }
+    Text {
+        id: name
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: parent.height / 5
+        text: gaugeName
+        font.pointSize: 20
+        color: "white"
+        opacity: 0.65
     }
 }

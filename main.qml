@@ -14,6 +14,7 @@ Window {
     visible: true
     //property string socketServerUrl: ""
     property real mirrorOpacity: 0.0
+    property real rpmValue: 0
 
     Image {
         source: "images/background.png"
@@ -29,6 +30,7 @@ Window {
         border.color: "Sienna"
     }
 
+    // Use either dashboard camera or RearViewMirror-module (as floating camera).
     Rectangle {     // rear-view mirror in dashboard
         id: mirrorRectangle
         width: 500
@@ -54,10 +56,9 @@ Window {
             opacity: mirrorOpacity
         }
     }
-
-//    RearViewMirror {    // floating rear-view mirror
-//        visible: true
-//    }
+    //RearViewMirror {    // floating rear-view mirror
+    //    visible: true
+    //}
 
     Rectangle {     // main gadgets
         id: mainMeters
@@ -70,88 +71,36 @@ Window {
             id: revMeter
             x: 18
             anchors.verticalCenter: parent.verticalCenter
-            opacity: 1
-
-            Timer {
-                id: rpmTimer
-                property int maxRpm: 8000
-                property bool increasing: true
-                repeat: true
-                interval: 1
-                onTriggered: {
-                    if (increasing) {
-                        if (revMeter.needleRotation < maxRpm) {
-                            revMeter.needleRotation += 25
-                        } else {
-                            increasing = false
-                        }
-                    } else {
-                        if (revMeter.needleRotation > 0) {
-                            revMeter.needleRotation -= 25
-                        } else {
-                            increasing = true
-                        }
-                    }
-                }
-            }
+            gaugeName: "RPM"
+            rotationFactor: 30.0
         }
 
         CircularGauge {
             id: speedoMeter
             anchors.verticalCenter: revMeter.verticalCenter
             anchors.left: revMeter.right
-
-            Timer {
-                id: speedTimer
-                property int maxRpm: 8000
-                property bool increasing: true
-                repeat: true
-                interval: 1
-                onTriggered: {
-                    if (increasing) {
-                        if (speedoMeter.needleRotation < maxRpm) {
-                            speedoMeter.needleRotation += 15
-                        } else {
-                            increasing = false
-                        }
-                    } else {
-                        if (speedoMeter.needleRotation > 0) {
-                            speedoMeter.needleRotation -= 15
-                        } else {
-                            increasing = true
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    Rectangle {     // control buttons
-        id: controlbuttons
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.margins: 8
-        height: controlButtonsItem.buttonHeight
-        color: "transparent"
-
-        ControlButtons {
-            id: controlButtonsItem
+            gaugeName: "KM/H"
+            rotationFactor: 1.1
         }
     }
 
     SocketServer {
         id: socketServer
-        x: 9
-        y: 9
+        x: 9; y: 9
     }
 
-    SocketClient {
-        id: socketClient
-        x: socketServer.width + 15
-        y: 9
-    }
+//    SocketClient {
+//        id: socketClient
+//        x: socketServer.width + 15
+//        y: 9
+//    }
 
     function timeOfDay () {
         return Qt.formatTime(new(Date), "hh:mm:ss.zzz")
+    }
+
+    SensoryEngine {
+        //id: sensoryEngine
+        visible: true
     }
 }

@@ -51,59 +51,68 @@
 import QtQuick 2.0
 import QtWebSockets 1.0
 
-Rectangle {
+Item {
     property string serverUrl: server.url
 
-    id: serverRectangle
-    width: 400
-    height: 120
-    Text {
-        text: qsTr("Socket server")
-        anchors.right: parent.right
-    }
+    function setGauge(gaugeIn) {
+        var gaugeType = gaugeIn.substring(0,1)
+        var gaugeValue = gaugeIn.substring(1)
 
-    function appendMessage(message) {
-        messageBox.text += "\n" + message
+        switch(gaugeType) {
+        case "R":
+            revMeter.needleRotation = gaugeValue;
+            break;
+        case "S":
+            speedoMeter.needleRotation = gaugeValue;
+            break;
+        default:
+            break;
+        }
     }
 
     WebSocketServer {
         id: server
         listen: true
         onClientConnected: {
-            webSocket.onTextMessageReceived.connect(function(message) {
-                appendMessage(qsTr(timeOfDay() + " Server received message: %1").arg(message));
-                webSocket.sendTextMessage(qsTr(timeOfDay() + " Server message."));
+//            webSocket.onTextMessageReceived.connect(function(rpmIn) {
+//                setRpm(qsTr("%1").arg(rpmIn));
+//            });
+//            webSocket.onTextMessageReceived.connect(function(speedIn) {
+//                setSpeed(qsTr("%1").arg(speedIn));
+//            });
+            webSocket.onTextMessageReceived.connect(function(gaugeIn) {
+                setGauge(qsTr("%1").arg(gaugeIn));
             });
         }
         onErrorStringChanged: {
-            appendMessage(qsTr(timeOfDay() + " Server error: %1").arg(errorString));
+            console.log(qsTr(timeOfDay() + " Server error: %1").arg(errorString));
         }
     }
 
-    WebSocket {
-        id: socket
-        url: server.url
-        active: true
-        onTextMessageReceived: appendMessage(qsTr(timeOfDay() + " Server received message: %1").arg(message))
-        onStatusChanged: {
-            if (socket.status == WebSocket.Error) {
-                appendMessage(qsTr("Server error: %1").arg(socket.errorString));
-            } else if (socket.status == WebSocket.Closed) {
-                appendMessage(qsTr("Server socket closed."));
-            }
-        }
-    }
+//    WebSocket {
+//        id: socket
+//        url: server.url
+//        active: true
+//        onTextMessageReceived: appendMessage(qsTr(timeOfDay() + " Server received message: %1").arg(message))
+//        onStatusChanged: {
+//            if (socket.status == WebSocket.Error) {
+//                appendMessage(qsTr("Server error: %1").arg(socket.errorString));
+//            } else if (socket.status == WebSocket.Closed) {
+//                appendMessage(qsTr("Server socket closed."));
+//            }
+//        }
+//    }
 
-    Text {
-        id: messageBox
-        color: "green"
-        text: qsTr("Click to send a message!")
+//    Text {
+//        id: messageBox
+//        color: "green"
+//        text: qsTr("Click to send a message!")
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                socket.sendTextMessage(qsTr(timeOfDay() + " Message from server."));
-            }
-        }
-    }
+//        MouseArea {
+//            anchors.fill: parent
+//            onClicked: {
+//                socket.sendTextMessage(qsTr(timeOfDay() + " Message from server."));
+//            }
+//        }
+//    }
 }

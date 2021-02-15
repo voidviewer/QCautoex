@@ -7,6 +7,8 @@ Item {
     DefaultButton {
         id: startStopButton
         buttonText: "Start/Stop"
+        anchors.left: parent.left
+        anchors.leftMargin: buttonSpacing
         onClicked: {
             rpmTimer.running = !rpmTimer.running
             speedTimer.running = !speedTimer.running
@@ -18,10 +20,12 @@ Item {
         anchors.left: startStopButton.right
         anchors.leftMargin: buttonSpacing
         onClicked: {
-            revMeter.needleRotation = 45
             rpmTimer.running = false
-            speedoMeter.needleRotation = 45
+            revMeter.needleRotation = 45
+            sensoryEngine.rpm = 0
             speedTimer.running = false
+            speedoMeter.needleRotation = 45
+            sensoryEngine.speed = 0
         }
     }
     DefaultButton {

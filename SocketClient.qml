@@ -51,6 +51,7 @@ import QtQuick 2.0
 import QtWebSockets 1.0
 
 Rectangle {
+    id: socketClientRectangle
     width: 400
     height: 120
     Text {
@@ -58,7 +59,7 @@ Rectangle {
         anchors.right: parent.right
     }
 
-    WebSocket {
+    WebSocket {     // activity when socket message received
         id: socket
         //url: server.url
         url: socketServer.serverUrl
@@ -66,13 +67,9 @@ Rectangle {
         onTextMessageReceived: {
             messageBox.text = messageBox.text + "\n" + timeOfDay() + " Client received message: " + message
         }
-//        onStatusChanged: if (socket.status == WebSocket.Error) {
-//                             console.log("Client error: " + socket.errorString)
-//                         } else if (socket.status == WebSocket.Open) {
-//                             socket.sendTextMessage("Hello from client")
-//                         } else if (socket.status == WebSocket.Closed) {
-//                             messageBox.text += "\nClient socket closed"
-//                         }
+        onStatusChanged: if (socket.status == WebSocket.Error) {
+                             console.log("Client error: " + socket.errorString)
+                         }
     }
 
 //    WebSocket {
@@ -92,7 +89,7 @@ Rectangle {
 //                         }
 //    }
 
-    Text {
+    Text {      // this allows testing of socket status
         id: messageBox
         color: "green"
         text: socket.status == WebSocket.Open ? qsTr("Sending...") : qsTr("Welcome!")
@@ -103,14 +100,4 @@ Rectangle {
             }
         }
     }
-
-//    MouseArea {
-//        anchors.fill: parent
-//        onClicked: {
-//            socket.active = !socket.active
-//            secureWebSocket.active = !secureWebSocket.active;
-//            //console.log("socket.active: " + socket.active)
-//            //Qt.quit();
-//        }
-//    }
 }

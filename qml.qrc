@@ -9,5 +9,6 @@
         <file>SocketClient.qml</file>
         <file>ControlButtons.qml</file>
         <file>SocketServer.qml</file>
+        <file>SensoryEngine.qml</file>
     </qresource>
 </RCC>
