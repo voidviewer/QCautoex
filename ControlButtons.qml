@@ -12,6 +12,8 @@ Item {
         onClicked: {
             rpmTimer.running = !rpmTimer.running
             speedTimer.running = !speedTimer.running
+            turnSignals.running = !turnSignals.running
+            //turnSignalsItem.ti
         }
     }
     DefaultButton {
@@ -21,11 +23,12 @@ Item {
         anchors.leftMargin: buttonSpacing
         onClicked: {
             rpmTimer.running = false
-            revMeter.needleRotation = 45
+            revMeter.needleRotation = 0
             sensoryEngine.rpm = 0
             speedTimer.running = false
-            speedoMeter.needleRotation = 45
+            speedoMeter.needleRotation = 0
             sensoryEngine.speed = 0
+            turnSignals.running = false
         }
     }
     DefaultButton {

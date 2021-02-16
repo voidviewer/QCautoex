@@ -9,20 +9,9 @@ Window {
     maximumHeight: 150
     minimumWidth: 500
     minimumHeight: 150
-//    x: ((window.x + window.width) - (window.width / 2)) - (width / 2)
     y: window.y - height
     x: (window.x + window.width) - mirror.width
-//    y: window.y + 3
     color: "black"
-
-//    onFlagsChanged: {
-//        console.log("onFlagsChanged");
-//        if (mirror.flags != 2048) {
-//            mirror.flags = "FramelessWindowHint"
-//        } else {
-//            mirror.flags = 1
-//        }
-//    }
 
     Rectangle {     // window border
         id: mirrorRectangle

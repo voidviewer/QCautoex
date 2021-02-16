@@ -2,9 +2,8 @@ import QtQuick 2.0
 import QtQuick.Shapes 1.15
 
 Item {
-    property int needleRotation: 45
+    property int needleRotation: 0
     property string gaugeName: "*"
-    property real rotationFactor: 30.0
 
     id: root
     width: 400
@@ -37,8 +36,7 @@ Item {
         width: 7
         height: ((parent.height - 12) / 2) - 20
         color: "orange"
-        //transform: Rotation { origin.x: 3.5; origin.y: 3.5; angle: 45 + (needleRotation / 30)}
-        transform: Rotation { origin.x: 3.5; origin.y: 3.5; angle: 45 + (needleRotation / rotationFactor)}
+        transform: Rotation { origin.x: 3.5; origin.y: 3.5; angle: 45 + needleRotation}
         Shape {
             width: 21; height: 21
             x: -6.5; y: -6.5
@@ -54,12 +52,11 @@ Item {
         }
     }
     Text {
-        id: name
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: parent.height / 5
         text: gaugeName
-        font.pointSize: 20
+        font.pointSize: 18
         color: "white"
         opacity: 0.65
     }

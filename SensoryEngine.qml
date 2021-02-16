@@ -10,7 +10,6 @@ Window {
     id: sensoryEngine
     //flags: "FramelessWindowHint"
     maximumWidth: 480; maximumHeight: 480; minimumWidth: 480; minimumHeight: 480
-    //x: (window.x + window.width) - sensoryEngine.width; y: window.y - 100
     x: 2000; y: 300
     color: "#323232"
 
@@ -24,6 +23,23 @@ Window {
         onStatusChanged: if (socket.status == WebSocket.Error) {
                              console.log("Client error: " + socket.errorString)
                          }
+    }
+
+    Timer {
+        id: turnSignals
+        repeat: true
+        interval: 2500
+        onTriggered: {
+            var randomStatus = Math.random();
+
+            if (randomStatus < 0.34) {
+                socket.sendTextMessage("Tl");
+            } else if (randomStatus < 0.67) {
+                socket.sendTextMessage("To");
+            } else {
+                socket.sendTextMessage("Tr");
+            }
+        }
     }
 
     Timer {
@@ -59,13 +75,13 @@ Window {
         onTriggered: {
             if (increasing) {
                 if (speed < maxSpeed) {
-                    speed += 15
+                    speed += 2
                 } else {
                     increasing = false
                 }
             } else {
                 if (speed > 0) {
-                    speed -= 15
+                    speed -= 2
                 } else {
                     increasing = true
                 }
