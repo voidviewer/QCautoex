@@ -30,6 +30,8 @@ Item {
             sensoryEngine.speed = 0
             turnSignals.running = false
             turnSignalsItem.resetTurnSignals()
+            gearTimer.running = false
+            gear.text = "P"
         }
     }
     DefaultButton {

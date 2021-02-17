@@ -10,53 +10,70 @@ Item {
     height: 400
 
     Rectangle {
-        id: gaugeCircle
-        width: parent.width - 12
-        height: parent.height - 12
-        anchors.verticalCenter: parent.verticalCenter
+        id: gaugeCircle     // gauge border
+        width: parent.width - (window.height * 0.025)
+        height: parent.height - (window.height * 0.025)
+        //anchors.verticalCenter: parent.verticalCenter
+        //anchors.horizontalCenter: parent.horizontalCenter
         color: "transparent"
         border.color: "white"
-        border.width: 7
+        border.width: window.height * 0.015
         radius: width * 0.5
         opacity: 0.5
-        Rectangle {
-            x: 6
-            y: 6
-            width: parent.width - 12
-            height: parent.height - 12
+        Rectangle {         // gauge background
+            anchors.centerIn: parent
+            width: parent.width * 0.99
+            height: parent.height * 0.99
             radius: width * 0.5
-            color: "black"
-            opacity: 1
+            color: "#000000"
         }
-    }
-    Rectangle {
-        id: gaugeNeedle
-        x: ((parent.width - 12) / 2) - 3.5
-        y: ((parent.height - 12) / 2) - 3.5
-        width: 7
-        height: ((parent.height - 12) / 2) - 20
-        color: "orange"
-        transform: Rotation { origin.x: 3.5; origin.y: 3.5; angle: 45 + needleRotation}
-        Shape {
-            width: 21; height: 21
-            x: -6.5; y: -6.5
-            ShapePath {
-                strokeWidth: 2
-                strokeColor: "white"
-                fillColor: "black"
-                startX: 0; startY: 0
-                PathLine { x: 21; y: 0 }
-                PathLine { x: 10; y: 21 }
-                PathLine { x: 0.1; y: 0.1 }
+        Rectangle {     // needle
+            id: gaugeNeedle
+            height: (gaugeCircle.height / 2) * 0.94
+            width: height / 40
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: parent.height / 2
+            color: "#fb4f14"
+            transform: Rotation {
+                origin.x: gaugeNeedle.width / 2;
+                origin.y: (gaugeCircle.y);
+                angle: 45 + needleRotation
+            }
+            Shape {     // needle center
+                ShapePath {
+                    strokeWidth: 1
+                    strokeColor: "#fb4f14"
+                    fillColor: "#fafafa"
+                    startX: -(gaugeNeedle.height / 20) + (gaugeNeedle.width / 2);
+                    startY: -(gaugeNeedle.height / 20)
+                    PathLine {
+                        x: (gaugeNeedle.height / 20) + (gaugeNeedle.width / 2);
+                        y: -(gaugeNeedle.height / 20)
+                    }
+                    PathLine {
+                        x: gaugeNeedle.width / 2;
+                        y: gaugeNeedle.height / 20
+                    }
+                    PathLine {
+                        x: -(gaugeNeedle.height / 20) + (gaugeNeedle.width / 2) + 0.001;
+                        y: -(gaugeNeedle.height / 20) + 0.001
+                    }
+                }
             }
         }
     }
     Text {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: parent.height / 3
+        anchors.bottomMargin: parent.height / 2.6
         text: gaugeName
-        font.pointSize: 18
+        font.pixelSize: {
+            if ((window.height * 0.0375) > 0) {
+                window.height * 0.0375
+            } else {
+                1
+            }
+        }
         color: "white"
         opacity: 0.65
     }

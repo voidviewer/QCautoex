@@ -5,12 +5,8 @@ Window {
     title: qsTr("QCautoex - rearview mirror")
     id: mirror
     flags: "FramelessWindowHint"
-    maximumWidth: 500
-    maximumHeight: 150
-    minimumWidth: 500
-    minimumHeight: 150
     y: window.y - height
-    x: (window.x + window.width) - mirror.width
+    x: window.x + (window.width / 2) - (mirror.width / 2)
     color: "black"
 
     Rectangle {     // window border

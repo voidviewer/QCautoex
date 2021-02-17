@@ -2,7 +2,8 @@ import QtQuick 2.0
 import QtQuick.Shapes 1.15
 
 Item {
-    property int signalSize: 32
+    //property int signalSize: 32
+    property int signalSize: window.height * 0.067
     property string signalValue: "o"
     property string lightOn: "#90ee90"
     property string lightOff: "#006400"
@@ -51,8 +52,8 @@ Item {
         width: signalSize; height: signalSize
         x: 1
         transform: Rotation {
-            origin.x: (signalShapeLeft.width / 2) - 1;
-            origin.y: (signalShapeLeft.height / 2) - 1;
+            origin.x: signalSize / 2;
+            origin.y: signalSize / 2;
             angle: 90
         }
         ShapePath {
@@ -61,8 +62,8 @@ Item {
             strokeColor: "grey"
             fillColor: "darkgreen"
             startX: 0; startY: 0
-            PathLine { x: signalShapeLeft.width; y: 0 }
-            PathLine { x: (signalShapeLeft.width / 2) - 1; y: signalShapeLeft.height }
+            PathLine { x: signalSize; y: 0 }
+            PathLine { x: (signalSize / 2) - 1; y: signalSize }
             PathLine { x: 0.1; y: 0.1 }
         }
     }
@@ -70,10 +71,10 @@ Item {
     Shape {     // right
         id: signalShapeRight
         width: signalSize; height: signalSize
-        x: turnSignals.width - signalShapeRight.width
+        x: turnSignals.width - 2 * signalSize
         transform: Rotation {
-            origin.x: (signalShapeRight.width / 2);
-            origin.y: (signalShapeRight.height / 2);
+            origin.x: signalSize / 2;
+            origin.y: signalSize / 2 - 0.5;
             angle: -90
         }
         ShapePath {
@@ -82,8 +83,8 @@ Item {
             strokeColor: "grey"
             fillColor: "darkgreen"
             startX: 0; startY: 0
-            PathLine { x: signalShapeRight.width; y: 0 }
-            PathLine { x: (signalShapeRight.width / 2) - 1; y: signalShapeRight.height }
+            PathLine { x: signalSize; y: 0 }
+            PathLine { x: (signalSize / 2) - 1; y: signalSize }
             PathLine { x: 0.1; y: 0.1 }
         }
     }
