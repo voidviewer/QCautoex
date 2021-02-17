@@ -66,6 +66,25 @@ Window {
             x: 18
             anchors.verticalCenter: parent.verticalCenter
             gaugeName: "RPM"
+            Rectangle {
+                id: gearDisplay
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 20
+                width: parent.width / 7
+                height: parent.height / 5
+                color: "transparent"
+                border.width: 1
+                border.color: "#484848"
+                Text {
+                    id: gear
+                    text: qsTr("P")
+                    color: "#00cccc"
+                    opacity: 0.75
+                    font.pixelSize: parent.height * 0.9
+                    anchors.centerIn: parent
+                }
+            }
         }
 
         CircularGauge {
@@ -74,6 +93,15 @@ Window {
             anchors.left: revMeter.right
             gaugeName: "KM/H"
         }
+    }
+
+    Rectangle {     // left side gadgets
+        x: 3; y: 3
+        width: (window.width - mainMeters.width) / 2
+        height: window.height - 6
+        color: "transparent"
+        border.width: 1
+        border.color: "#484848"
     }
 
     Rectangle {     // turn signals

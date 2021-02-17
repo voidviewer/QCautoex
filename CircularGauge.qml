@@ -54,7 +54,7 @@ Item {
     Text {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: parent.height / 5
+        anchors.bottomMargin: parent.height / 3
         text: gaugeName
         font.pointSize: 18
         color: "white"

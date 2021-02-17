@@ -34,12 +34,16 @@ Item {
                 leftShapePath.fillColor = lightOff;
                 break;
             default:
-                leftShapePath.fillColor = lightOff;
-                rightShapePath.fillColor = lightOff;
-                turnSignalTimer.running = false
+                resetTurnSignals()
                 break;
             }
         }
+    }
+
+    function resetTurnSignals() {
+        leftShapePath.fillColor = lightOff;
+        rightShapePath.fillColor = lightOff;
+        turnSignalTimer.running = false
     }
 
     Shape {     // left

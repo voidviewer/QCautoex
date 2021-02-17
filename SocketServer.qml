@@ -20,6 +20,9 @@ Item {
         case "T":
             turnSignalsItem.signalValue = gaugeValue
             break;
+        case "G":
+            gear.text = gaugeValue
+            break;
         default:
             break;
         }

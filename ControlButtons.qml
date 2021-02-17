@@ -13,7 +13,7 @@ Item {
             rpmTimer.running = !rpmTimer.running
             speedTimer.running = !speedTimer.running
             turnSignals.running = !turnSignals.running
-            //turnSignalsItem.ti
+            gearTimer.running = !gearTimer.running
         }
     }
     DefaultButton {
@@ -29,6 +29,7 @@ Item {
             speedoMeter.needleRotation = 0
             sensoryEngine.speed = 0
             turnSignals.running = false
+            turnSignalsItem.resetTurnSignals()
         }
     }
     DefaultButton {
