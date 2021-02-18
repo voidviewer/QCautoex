@@ -1,4 +1,6 @@
+//
 // Module generates vehicle, environment and traffic data for dashdoard module.
+//
 import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtQuick.Window 2.15
@@ -131,20 +133,20 @@ Window {
 
             if (randomStatus < 0.34) {
                 socket.sendTextMessage("Tl");
-                logModel.append({"timeStamp": timeOfDay(), "logEntry": "left turn"})
+                logModel.append({"timeStamp": timeOfDay(), "logEntry": "turn left"})
             } else if (randomStatus < 0.67) {
                 socket.sendTextMessage("To");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "turn signal off"})
             } else {
                 socket.sendTextMessage("Tr");
-                logModel.append({"timeStamp": timeOfDay(), "logEntry": "right turn"})
+                logModel.append({"timeStamp": timeOfDay(), "logEntry": "turn right"})
             }
         }
     }
 
     Timer {     // engine revolutions
         id: rpmTimer
-        property int maxRpm: 8000
+        property int maxRpm: 9000
         property bool increasing: true
         repeat: true
         interval: 1
@@ -156,7 +158,7 @@ Window {
                     increasing = false
                 }
             } else {
-                if (rpm > 0) {
+                if (rpm > 750) {
                     rpm -= 15
                 } else {
                     increasing = true

@@ -1,9 +1,12 @@
+//
+// Module contains turn lights.
+//
 import QtQuick 2.0
 import QtQuick.Shapes 1.15
 
 Item {
-    //property int signalSize: 32
-    property int signalSize: window.height * 0.067
+    //property int turnSignalSize: 32
+    property int turnSignalSize: window.height * 0.067
     property string signalValue: "o"
     property string lightOn: "#90ee90"
     property string lightOff: "#006400"
@@ -48,12 +51,12 @@ Item {
     }
 
     Shape {     // left
-        id: signalShapeLeft
-        width: signalSize; height: signalSize
+        //id: signalShapeLeft
+        width: turnSignalSize; height: turnSignalSize
         x: 1
         transform: Rotation {
-            origin.x: signalSize / 2;
-            origin.y: signalSize / 2;
+            origin.x: turnSignalSize / 2;
+            origin.y: turnSignalSize / 2;
             angle: 90
         }
         ShapePath {
@@ -62,19 +65,19 @@ Item {
             strokeColor: "grey"
             fillColor: "darkgreen"
             startX: 0; startY: 0
-            PathLine { x: signalSize; y: 0 }
-            PathLine { x: (signalSize / 2) - 1; y: signalSize }
+            PathLine { x: turnSignalSize; y: 0 }
+            PathLine { x: (turnSignalSize / 2) - 1; y: turnSignalSize }
             PathLine { x: 0.1; y: 0.1 }
         }
     }
 
     Shape {     // right
-        id: signalShapeRight
-        width: signalSize; height: signalSize
-        x: turnSignals.width - 2 * signalSize
+        //id: signalShapeRight
+        width: turnSignalSize; height: turnSignalSize
+        x: turnSignals.width - (2 * turnSignalSize)
         transform: Rotation {
-            origin.x: signalSize / 2;
-            origin.y: signalSize / 2 - 0.5;
+            origin.x: turnSignalSize / 2;
+            origin.y: turnSignalSize / 2 - 0.5;
             angle: -90
         }
         ShapePath {
@@ -83,8 +86,8 @@ Item {
             strokeColor: "grey"
             fillColor: "darkgreen"
             startX: 0; startY: 0
-            PathLine { x: signalSize; y: 0 }
-            PathLine { x: (signalSize / 2) - 1; y: signalSize }
+            PathLine { x: turnSignalSize; y: 0 }
+            PathLine { x: (turnSignalSize / 2) - 1; y: turnSignalSize }
             PathLine { x: 0.1; y: 0.1 }
         }
     }

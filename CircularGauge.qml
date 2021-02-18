@@ -1,3 +1,6 @@
+//
+// Module provides base item for circular gauges.
+//
 import QtQuick 2.0
 import QtQuick.Shapes 1.15
 
@@ -6,18 +9,16 @@ Item {
     property string gaugeName: "*"
 
     id: root
-    width: 400
-    height: 400
+    //width: 400
+    //height: 400
 
     Rectangle {
         id: gaugeCircle     // gauge border
         width: parent.width - (window.height * 0.025)
         height: parent.height - (window.height * 0.025)
-        //anchors.verticalCenter: parent.verticalCenter
-        //anchors.horizontalCenter: parent.horizontalCenter
         color: "transparent"
         border.color: "white"
-        border.width: window.height * 0.015
+        border.width: window.height * 0.0175
         radius: width * 0.5
         opacity: 0.5
         Rectangle {         // gauge background
@@ -29,21 +30,25 @@ Item {
         }
         Rectangle {     // needle
             id: gaugeNeedle
-            height: (gaugeCircle.height / 2) * 0.94
-            width: height / 40
+            height: (gaugeCircle.height / 2) * 0.9
+            width: height / 30
             anchors.horizontalCenter: parent.horizontalCenter
             y: parent.height / 2
-            color: "#fb4f14"
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#fb4f14" }    // base
+                //GradientStop { position: 1.0; color: "#fcf75e" }
+                GradientStop { position: 1.0; color: "#ffffff" }    // tip
+            }
             transform: Rotation {
                 origin.x: gaugeNeedle.width / 2;
-                origin.y: (gaugeCircle.y);
+                origin.y: gaugeCircle.y;
                 angle: 45 + needleRotation
             }
             Shape {     // needle center
                 ShapePath {
                     strokeWidth: 1
                     strokeColor: "#fb4f14"
-                    fillColor: "#fafafa"
+                    fillColor: "#ffffff"
                     startX: -(gaugeNeedle.height / 20) + (gaugeNeedle.width / 2);
                     startY: -(gaugeNeedle.height / 20)
                     PathLine {
@@ -62,7 +67,7 @@ Item {
             }
         }
     }
-    Text {
+    Text {      // gauge description text
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: parent.height / 2.6
@@ -74,7 +79,7 @@ Item {
                 1
             }
         }
-        color: "white"
+        color: "#fb4f14"
         opacity: 0.65
     }
 }

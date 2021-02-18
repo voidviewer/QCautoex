@@ -10,7 +10,7 @@ Item {
 
         switch(gaugeType) {
         case "R":
-            gaugeValue = gaugeValue * (270 / 8000)
+            gaugeValue = gaugeValue * (270 / 9000)
             revMeter.needleRotation = gaugeValue;
             break;
         case "S":
