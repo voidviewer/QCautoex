@@ -28,7 +28,9 @@ Rectangle {
         x: labelRectangle.width - labelRectangle.width
         y: labelRectangle.height - labelRectangle.width
         color: "transparent"
-        opacity: 0.7
+        // font opacity adjusted according to its size for compensating brightness labels
+        // appear on different gauges
+        opacity: 0.85 - (labelNumberSize / 150)
         transform: Rotation {
             origin.x: width / 2
             origin.y: width / 2

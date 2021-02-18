@@ -54,7 +54,8 @@ Window {
             gaugeName: "rpm"
             height: mainMeters.height * 0.8
             width: height
-            Rectangle {
+
+            Rectangle {     // gear display
                 id: gearDisplay
                 width: revMeter.width / 7
                 height: revMeter.height / 5
@@ -81,68 +82,15 @@ Window {
                 }
             }
 
-            GaugeLabel {
-                labelNumber: 9
-                labelNumberSize: revMeter.height / revLabelSize
-                labelRotation: 270
-                gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 8
-                labelNumberSize: revMeter.height / revLabelSize
-                labelRotation: 240
-                gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 7
-                labelNumberSize: revMeter.height / revLabelSize
-                labelRotation: 210
-                gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 6
-                labelNumberSize: revMeter.height / revLabelSize
-                labelRotation: 180
-                gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 5
-                labelNumberSize: revMeter.height / revLabelSize
-                labelRotation: 150
-                gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 4
-                labelNumberSize: revMeter.height / revLabelSize
-                labelRotation: 120
-                gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 3
-                labelNumberSize: revMeter.height / revLabelSize
-                labelRotation: 90
-                gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 2
-                labelNumberSize: revMeter.height / revLabelSize
-                labelRotation: 60
-                gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 1
-                labelNumberSize: revMeter.height / revLabelSize
-                labelRotation: 30
-                gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
+            Repeater {      // revolution value labels
+                model: 9
+                delegate: GaugeLabel {
+                    labelNumber: index + 1
+                    labelNumberSize: revMeter.height / revLabelSize
+                    labelRotation: (index + 1) * 30
+                    gaugeLabelCenterMultiplierX: revLabelCenterMultiplierX
+                    gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
+                }
             }
         }
 
@@ -155,96 +103,15 @@ Window {
             height: mainMeters.height * 0.8
             width: height
 
-            GaugeLabel {
-                labelNumber: 360
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 270
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 330
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 247.5
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 300
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 225
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 270
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 202.5
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 240
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 180
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 210
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 157.5
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 180
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 135
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 150
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 112.5
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 120
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 90
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 90
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 67.5
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 60
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 45
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 30
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 22.5
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
-            }
-            GaugeLabel {
-                labelNumber: 0
-                labelNumberSize: speedoMeter.height / speedLabelSize
-                labelRotation: 0
-                gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
-                gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
+            Repeater {      // speed value labels
+                model: 13
+                delegate: GaugeLabel {
+                    labelNumber: index * 30
+                    labelNumberSize: speedoMeter.height / speedLabelSize
+                    labelRotation: index * 22.5
+                    gaugeLabelCenterMultiplierX: speedLabelCenterMultiplierX
+                    gaugeLabelCenterMultiplierY: speedLabelCenterMultiplierY
+                }
             }
         }
     }
