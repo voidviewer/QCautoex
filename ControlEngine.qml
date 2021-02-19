@@ -3,6 +3,7 @@
 //
 import QtQuick 2.0
 import QtQuick.Controls 1.4
+//import QtQuick.Controls.Styles 1.4
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtWebSockets 1.0
@@ -13,12 +14,82 @@ Window {
     property int speed: 0
     property int engineOilTemp: 50
 
-    title: qsTr("QCautoex - sensory engine")
     id: sensoryEngine
-    //flags: "FramelessWindowHint"
+    title: qsTr("QCautoex - sensory engine")
     maximumWidth: 280; maximumHeight: 480; minimumWidth: 280; minimumHeight: 480
-    x: 2000; y: 300
+    x: screen.width - 280
+    y: (screen.height / 2) - (height / 2)
     color: "#323232"
+
+    Rectangle {
+        id: controls
+        color: "transparent"
+        border.width: 1
+        border.color: "grey"
+        width: parent.width
+        height: parent.height / 2
+
+//        Rectangle {
+//            id: windowFrameToggleRectangle
+//            color: "transparent"
+//            anchors.topMargin: 4
+//            anchors.top: parent.top
+//            width: parent.width * 0.95
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            height: 22
+//            Text {
+//                id: windowFrameToggleText
+//                anchors.verticalCenter: parent.verticalCenter
+//                text: "Show window border "
+//                color: "#ffffff"
+//            }
+//            CheckBox {
+//                id: windowFrameToggle
+//                anchors.left: windowFrameToggleText.right
+//                transform: Scale { xScale: 0.55; yScale: 0.55 }
+//                //anchors.verticalCenter: parent.verticalCenter
+
+//                onCheckStateChanged: {
+//                    if (checked) {
+//                        window.flags = "FramelessWindowHint"
+//                    } else {
+//                        window.flags = 1
+//                    }
+//                }
+//            }
+//        }
+
+        Rectangle {
+            //anchors.top: windowFrameToggleRectangle.bottom
+            anchors.top: parent.top
+            anchors.topMargin: 8
+            width: parent.width * 0.95
+            anchors.horizontalCenter: parent.horizontalCenter
+            Text {
+                id: windowSizeSliderText
+                //anchors.top: controls.bottom
+                height: 22
+                text: "Dashboard size:"
+                color: "#ffffff"
+            }
+            Slider {    // dashboard window size adjustment
+                id: windowSizeSlider
+                width: parent.width * 0.9
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: 16
+                transform: Scale { yScale: 0.75 }
+                anchors.top: windowSizeSliderText.bottom
+                anchors.topMargin: 1
+                from: 180
+                value: 180
+                to: 480
+                onValueChanged: {
+                    window.height = value;
+                    window.width = value * 4;
+                }
+            }
+        }
+    }
 
     ListModel {
         id: logModel
@@ -47,16 +118,26 @@ Window {
     Rectangle {
         id: logRectangle
         color: "transparent"
-        anchors.fill: parent
-        //height: sensoryEngine.height - controlButtons.top
+        anchors.top: controls.bottom
+        anchors.bottom: controlButtons.top
+        anchors.margins: 3
+        //anchors.bottomMargin: 28
+        width: parent.width
+        border.width: 1
+        border.color: "grey"
 
         ListView {
             id: logView
             anchors.fill: logRectangle
+            anchors.topMargin: 20
+            anchors.bottomMargin: 20
+            anchors.leftMargin: 6
+            anchors.rightMargin: 6
             model: logModel
             delegate: logDelegate
             //highlight: Rectangle { color: "lightsteelblue" }
             focus: true
+            onCountChanged: positionViewAtEnd()
         }
     }
 
@@ -65,8 +146,6 @@ Window {
         anchors.bottom: parent.bottom
         anchors.margins: 8
         height: controlButtonsItem.buttonHeight
-        //color: "#484848"
-        //color: "transparent"
 
         ControlButtons {
             id: controlButtonsItem
@@ -168,7 +247,7 @@ Window {
                 }
             }
             socket.sendTextMessage("Eo" + engineOilTemp)
-            logModel.append({"timeStamp": timeOfDay(), "logEntry": "Eo" + engineOilTemp})
+            logModel.append({"timeStamp": timeOfDay(), "logEntry": "engine oil temperature " + engineOilTemp})
         }
     }
 

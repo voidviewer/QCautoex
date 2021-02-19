@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 Item {
     property int buttonHeight: 24
-    property int buttonSpacing: 8
+    property int buttonSpacing: 4
 
     DefaultButton {
         id: startStopButton

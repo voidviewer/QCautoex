@@ -74,7 +74,7 @@ Item {
     Shape {     // right
         //id: signalShapeRight
         width: turnSignalSize; height: turnSignalSize
-        x: turnSignals.width - (2 * turnSignalSize)
+        x: turnSignals.width - turnSignalSize
         transform: Rotation {
             origin.x: turnSignalSize / 2;
             origin.y: turnSignalSize / 2 - 0.5;

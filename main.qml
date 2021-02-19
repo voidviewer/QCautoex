@@ -6,10 +6,17 @@ import QtWebSockets 1.1
 Window {
     title: qsTr("QCautoex - dashboard")
     id: window
-    //flags: "FramelessWindowHint"
+    flags: "FramelessWindowHint"
     maximumWidth: 1920; maximumHeight: 480;
     minimumWidth: 720; minimumHeight: 180
     visible: true
+    onWidthChanged: {
+        x = (Screen.width / 2) - (width / 2)
+    }
+    onHeightChanged: {
+        y = (Screen.height / 2) - (height / 2)
+    }
+
     property real mirrorOpacity: 0.0
     property real rpmValue: 0
     property int revLabelSize: 7
@@ -27,14 +34,23 @@ Window {
 
     Rectangle {     // window border
         id: windowBorder
+        anchors.centerIn: parent
         width: window.width
         height: window.height
         color: "transparent"
-        border.width: 3
-        border.color: "Sienna"
+        border.width: window.height * 0.01
+        border.color: "#808080"
+        Rectangle {
+            anchors.centerIn: parent
+            width: window.width - (window.height * 0.025)
+            height: window.height - (window.height * 0.025)
+            color: "transparent"
+            border.width: window.height * 0.01
+            border.color: "#484848"
+        }
     }
 
-//    Rectangle {     // window decoration
+//    Rectangle {     // dashboard decoration
 //        id: upperDecorationBar
 //        width: window.width * 0.95
 //        height: window.height * 0.15
@@ -163,7 +179,7 @@ Window {
         return Qt.formatTime(new(Date), "hh:mm:ss.zzz")
     }
 
-    SensoryEngine {
+    ControlEngine {
         visible: true
     }
 }
