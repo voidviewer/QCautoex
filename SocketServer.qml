@@ -5,26 +5,26 @@ Item {
     property string serverUrl: server.url
 
     function setGauge(gaugeIn) {
-        var gaugeType = gaugeIn.substring(0,1)
-        var gaugeValue = gaugeIn.substring(1)
+        var gaugeType = gaugeIn.substring(0,2)
+        var gaugeValue = gaugeIn.substring(2)
 
         switch(gaugeType) {
-        case "R":
+        case "R ":
             gaugeValue = gaugeValue * (270 / 9000)
             revMeter.needleRotation = gaugeValue;
             break;
-        case "S":
+        case "S ":
             gaugeValue = gaugeValue * (270 / 360)
             speedoMeter.needleRotation = gaugeValue;
             break;
-        case "T":
+        case "T ":
             turnSignalsItem.signalValue = gaugeValue
             break;
-        case "G":
+        case "G ":
             gearDisplay.gear = gaugeValue
             break;
-        case "Ot":
-            oilTemperatureGauge.gaugeValue = gaugeValue
+        case "Eo":
+            engineOilTemperatureGauge.gaugeValue = gaugeValue
             break;
         default:
             break;

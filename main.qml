@@ -34,6 +34,17 @@ Window {
         border.color: "Sienna"
     }
 
+//    Rectangle {     // window decoration
+//        id: upperDecorationBar
+//        width: window.width * 0.95
+//        height: window.height * 0.15
+//        color: "#646464"
+//        border.width: window.height * 0.01
+//        border.color: "#323232"
+//        anchors.centerIn: parent
+//        anchors.verticalCenterOffset: window.height * -0.25
+//    }
+
     Rectangle {     // left side gadgets
         property int defaultMargin : window.height / 6.5
         anchors.top: windowBorder.top
@@ -48,15 +59,13 @@ Window {
         border.width: 1
         border.color: "#484848"
 
-        SquareGauge {     // oil temperature gauge
-            id: oilTemperatureGauge
+        RectangularGauge {     // oil temperature gauge
+            id: engineOilTemperatureGauge
             anchors.top: parent.top
             anchors.right: parent.right
-            //anchors.margins: 4
             gaugeName: "OIL TEMP"
             height: window.height * 0.165
             width: height * 2
-            gaugeValue: 90
 
 //            Repeater {      // oil temperature value labels
 //                model: 5

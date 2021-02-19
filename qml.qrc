@@ -12,6 +12,6 @@
         <file>TurnSignals.qml</file>
         <file>CircularGaugeLabels.qml</file>
         <file>GearDisplay.qml</file>
-        <file>SquareGauge.qml</file>
+        <file>RectangularGauge.qml</file>
     </qresource>
 </RCC>

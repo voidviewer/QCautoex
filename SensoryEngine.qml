@@ -11,6 +11,8 @@ import QtQml.Models 2.15
 Window {
     property int rpm: 0
     property int speed: 0
+    property int engineOilTemp: 50
+
     title: qsTr("QCautoex - sensory engine")
     id: sensoryEngine
     //flags: "FramelessWindowHint"
@@ -95,27 +97,27 @@ Window {
 
             switch(selectedGear) {
             case "P":
-                socket.sendTextMessage("GP");
+                socket.sendTextMessage("G P");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear parking"})
                 break;
             case "R":
-                socket.sendTextMessage("GR");
+                socket.sendTextMessage("G R");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear reverse"})
                 break;
             case "N":
-                socket.sendTextMessage("GN");
+                socket.sendTextMessage("G N");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear neutral"})
                 break;
             case "D":
-                socket.sendTextMessage("GD");
+                socket.sendTextMessage("G D");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear drive"})
                 break;
             case "1":
-                socket.sendTextMessage("G1");
+                socket.sendTextMessage("G 1");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear 1"})
                 break;
             case "2":
-                socket.sendTextMessage("G2");
+                socket.sendTextMessage("G 2");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear 2"})
                 break;
             default:
@@ -132,15 +134,41 @@ Window {
             var randomStatus = Math.random();
 
             if (randomStatus < 0.34) {
-                socket.sendTextMessage("Tl");
+                socket.sendTextMessage("T l");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "turn left"})
             } else if (randomStatus < 0.67) {
-                socket.sendTextMessage("To");
+                socket.sendTextMessage("T o");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "turn signal off"})
             } else {
-                socket.sendTextMessage("Tr");
+                socket.sendTextMessage("T r");
                 logModel.append({"timeStamp": timeOfDay(), "logEntry": "turn right"})
             }
+        }
+    }
+
+    Timer {     // engine oil temperature
+        id: engineOilTemperatureTimer
+        property int minEngineOilTemp: 50
+        property int maxEngineOilTemp: 130
+        property bool increasing: true
+        repeat: true
+        interval: 2500
+        onTriggered: {
+            if (increasing) {
+                if (engineOilTemp < maxEngineOilTemp) {
+                    engineOilTemp += 5
+                } else {
+                    increasing = false
+                }
+            } else {
+                if (engineOilTemp > minEngineOilTemp) {
+                    engineOilTemp -= 5
+                } else {
+                    increasing = true
+                }
+            }
+            socket.sendTextMessage("Eo" + engineOilTemp)
+            logModel.append({"timeStamp": timeOfDay(), "logEntry": "Eo" + engineOilTemp})
         }
     }
 
@@ -164,8 +192,7 @@ Window {
                     increasing = true
                 }
             }
-            socket.sendTextMessage("R" + rpm)
-            //logModel.append({"timeStamp": timeOfDay(), "logEntry": "R" + rpm})
+            socket.sendTextMessage("R " + rpm)
         }
     }
 
@@ -189,7 +216,7 @@ Window {
                     increasing = true
                 }
             }
-            socket.sendTextMessage("S" + speed)
+            socket.sendTextMessage("S " + speed)
         }
     }
 }

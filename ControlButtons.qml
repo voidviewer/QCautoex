@@ -14,6 +14,7 @@ Item {
             speedTimer.running = !speedTimer.running
             turnSignals.running = !turnSignals.running
             gearTimer.running = !gearTimer.running
+            engineOilTemperatureTimer.running = !engineOilTemperatureTimer.running
         }
     }
     DefaultButton {
@@ -32,7 +33,8 @@ Item {
             turnSignalsItem.resetTurnSignals()
             gearTimer.running = false
             gearDisplay.gear = "P"
-            //gear.text = "P"
+            engineOilTemperatureTimer.running = false
+            engineOilTemperatureGauge.gaugeValue = 50
         }
     }
     DefaultButton {

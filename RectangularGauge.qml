@@ -1,11 +1,12 @@
 //
-// Module provides base item for circular gauges.
+// Module provides base item for rectangular gauges.
 //
 import QtQuick 2.7
 import QtQuick.Shapes 1.15
 
 Item {
-    property int gaugeValue: 0
+    property int gaugeValue: 50
+    property int gaugeRange: 80
     property string gaugeName: "*"
 
     Rectangle {
@@ -33,17 +34,17 @@ Item {
             rotation: -90
             gradient: Gradient {
                 GradientStop { position: 0.0; color: "blue" }
-                GradientStop { position: 1.0; color: "red" }
+                GradientStop { position: 0.35; color: "#0bda51" }
+                GradientStop { position: 0.65; color: "#0bda51" }
+                GradientStop { position: 1.0; color: "#ff0000" }
             }
 
             //opacity: 0.4
             Rectangle {     // slider
                 id: gaugeSlider
                 width: parent.width
-                height: parent.height - ((parent.height / 100) * gaugeValue)
+                height: parent.height - (parent.height - ((parent.height / gaugeRange) * (130 - gaugeValue)))
                 anchors.bottom: parent.bottom
-                //anchors.horizontalCenter: parent.horizontalCenter
-                //anchors.verticalCenter: parent.verticalCenter
                 color: "#161616"
                 opacity: 1
             }
