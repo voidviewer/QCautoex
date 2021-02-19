@@ -9,16 +9,14 @@ Item {
     property string gaugeName: "*"
 
     id: root
-    //width: 400
-    //height: 400
 
     Rectangle {
         id: gaugeCircle     // gauge border
-        width: parent.width - (window.height * 0.025)
-        height: parent.height - (window.height * 0.025)
+        width: parent.width
+        height: parent.height
         color: "transparent"
         border.color: "white"
-        border.width: window.height * 0.0175
+        border.width: parent.height * 0.0175
         radius: width * 0.5
         opacity: 0.5
         Rectangle {         // gauge background
@@ -31,7 +29,13 @@ Item {
         Rectangle {     // needle
             id: gaugeNeedle
             height: (gaugeCircle.height / 2) * 0.9
-            width: height / 30
+            width: {
+                if (height / 30 >= 1) {
+                    height / 30
+                } else {
+                    1
+                }
+            }
             anchors.horizontalCenter: parent.horizontalCenter
             y: parent.height / 2
             gradient: Gradient {
@@ -69,12 +73,14 @@ Item {
     }
     Text {      // gauge description text
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: parent.height / 2.6
+        anchors.top: parent.top
+        anchors.topMargin: (parent.height / 2) + (parent.height * 0.05)
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignTop
         text: gaugeName
         font.pixelSize: {
-            if ((window.height * 0.0375) > 0) {
-                window.height * 0.0375
+            if ((parent.height * 0.05) > 0) {
+                parent.height * 0.05
             } else {
                 1
             }

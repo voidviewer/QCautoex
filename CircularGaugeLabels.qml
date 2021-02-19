@@ -19,8 +19,6 @@ Rectangle {
         angle: 45 + labelRotation
     }
     color: "transparent"
-    //border.color: "grey"
-    //border.width: 1
 
     Rectangle {
         width: labelRectangle.width
@@ -39,6 +37,8 @@ Rectangle {
         }
         Text {
             id: labelText
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
             text: qsTr(labelNumber.toString())
             font.pixelSize: labelNumberSize
             color: "#ffffff"

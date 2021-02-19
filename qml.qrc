@@ -10,6 +10,8 @@
         <file>SocketServer.qml</file>
         <file>SensoryEngine.qml</file>
         <file>TurnSignals.qml</file>
-        <file>GaugeLabel.qml</file>
+        <file>CircularGaugeLabels.qml</file>
+        <file>GearDisplay.qml</file>
+        <file>SquareGauge.qml</file>
     </qresource>
 </RCC>

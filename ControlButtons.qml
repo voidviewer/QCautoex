@@ -31,7 +31,8 @@ Item {
             turnSignals.running = false
             turnSignalsItem.resetTurnSignals()
             gearTimer.running = false
-            gear.text = "P"
+            gearDisplay.gear = "P"
+            //gear.text = "P"
         }
     }
     DefaultButton {

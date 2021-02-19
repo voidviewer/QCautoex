@@ -21,7 +21,10 @@ Item {
             turnSignalsItem.signalValue = gaugeValue
             break;
         case "G":
-            gear.text = gaugeValue
+            gearDisplay.gear = gaugeValue
+            break;
+        case "Ot":
+            oilTemperatureGauge.gaugeValue = gaugeValue
             break;
         default:
             break;
