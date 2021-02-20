@@ -21,11 +21,12 @@ Window {
     property real rpmValue: 0
     property int revLabelSize: 7
     property int speedLabelSize: 14
-    property int oilTempLabelSize: 10
+    property int temperatureLabelSize: 5
     property real revLabelCenterMultiplierX: 0.0
     property real revLabelCenterMultiplierY: 0.0
     property real speedLabelCenterMultiplierX: 0.0
     property real speedLabelCenterMultiplierY: 0.065
+    property bool engineRunning: false
 
     Image {
         source: "images/background.png"
@@ -67,30 +68,105 @@ Window {
         anchors.left: windowBorder.left
         anchors.right: mainGauges.left
         anchors.bottom: windowBorder.bottom
-        anchors.topMargin: defaultMargin
-        anchors.bottomMargin: defaultMargin
-        anchors.leftMargin: defaultMargin
+        anchors.margins: defaultMargin
         anchors.rightMargin: defaultMargin / 2
         color: "transparent"
         border.width: 1
         border.color: "#484848"
 
-        RectangularGauge {     // oil temperature gauge
-            id: engineOilTemperatureGauge
+        Rectangle {     // transmission gauges
+            id: gaugeGroupLeft
             anchors.top: parent.top
             anchors.right: parent.right
-            gaugeName: "OIL TEMP"
-            height: window.height * 0.165
-            width: height * 2
+            height: parent.height
+            width: parent.height * 0.5
+            color: "transparent"
+            border.width: 1
+            border.color: "#323232"
+            Rectangle {
+                id: engineGaugesTextLeft
+                anchors.top: parent.top
+                width: parent.width
+                height: width / 6
+                color: "transparent"
+                Text {
+                    text: qsTr("TRANSMISSION")
+                    anchors.centerIn: parent
+                    font.pixelSize: {
+                        if ((parent.height * 0.65) > 0) {
+                            parent.height * 0.65
+                        } else {
+                            1
+                        }
+                    }
+                    font.bold: true
+                    //font.letterSpacing: parent.width / 20
+                    color: "#fb4f14"
+                    opacity: 0.65
+                }
+            }
 
-//            Repeater {      // oil temperature value labels
-//                model: 5
-//                delegate: CircularGaugeLabels {
-//                    labelNumber: 50 + (index * 20)
-//                    labelNumberSize: parent.height / oilTempLabelSize
-//                    labelRotation: 45 + ((index + 1) * 30)
-//                    gaugeLabelCenterMultiplierX: 0
-//                    gaugeLabelCenterMultiplierY: 0
+            RectangularGauge {      // oil temperature gauge
+                id: transmissionOilTemperatureGauge
+                anchors.top: engineGaugesTextLeft.bottom
+                gaugeName: "OIL TEMP"
+                gaugeMin: 50; gaugeMax: 130
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: transmissionOilTemperatureGaugeRepeater
+                    model: 5
+                    delegate: RectangularGaugeLabels {
+                        labelNumber: parent.gaugeMin + (index * 20)      // left side gauge
+                        //labelNumber: parent.gaugeMax - (index * 20)     // right side gauge
+                        labelNumberSize: parent.height / temperatureLabelSize
+                        labelIndex: index
+                        labelCount: transmissionOilTemperatureGaugeRepeater.model
+                    }
+                }
+            }
+
+            RectangularGauge {      // oil pressure gauge
+                id: transmissionOilPressureGauge
+                anchors.top: transmissionOilTemperatureGauge.bottom
+                anchors.topMargin: parent.height * 0.02
+                gaugeName: "OIL PRESSURE"
+                gaugeMin: 0; gaugeMax: 7
+                gaugeDirection: "right"
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: transmissionOilPressureGaugeRepeater
+                    model: 7
+                    delegate: RectangularGaugeLabels {
+                        //labelNumber: parent.gaugeMin + index      // left side gauge
+                        labelNumber: 1 + index      // left side gauge
+                        //labelNumber: parent.gaugeMax - index       // right side gauge
+                        labelNumberSize: parent.height / temperatureLabelSize
+                        labelIndex: index
+                        labelCount: transmissionOilPressureGaugeRepeater.model
+                    }
+                }
+            }
+
+//            RectangularGauge {      // water temperature gauge
+//                id: engineWaterTemperatureGauge
+//                anchors.top: engineOilTemperatureGauge.bottom
+//                anchors.topMargin: parent.height * 0.02
+//                gaugeName: "WATER TEMP"
+//                gaugeMin: 50; gaugeMax: 130
+//                width: parent.width
+//                height: width / 2
+
+//                Repeater {          // gauge labels
+//                    model: 5
+//                    delegate: RectangularGaugeLabels {
+//                        labelNumber: 50 + (index * 20)
+//                        labelNumberSize: parent.height / temperatureLabelSize
+//                        labelIndex: index
+//                    }
 //                }
 //            }
         }
@@ -131,6 +207,10 @@ Window {
                     gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
                 }
             }
+
+            SpeedDisplay {   // speed display
+                id: speedDisplay
+            }
         }
 
         CircularGauge {     // speed gauge
@@ -159,6 +239,120 @@ Window {
         }
     }
 
+    Rectangle {     // right side gadgets
+        property int defaultMargin : window.height / 6.5
+        anchors.top: windowBorder.top
+        anchors.left: mainGauges.right
+        anchors.right: windowBorder.right
+        anchors.bottom: windowBorder.bottom
+        anchors.margins: defaultMargin
+        anchors.leftMargin: defaultMargin / 2
+        color: "transparent"
+        border.width: 1
+        border.color: "#484848"
+
+        Rectangle {     // engine gauges
+            id: engineGaugesRight
+            anchors.top: parent.top
+            anchors.left: parent.left
+            height: parent.height
+            width: parent.height * 0.5
+            color: "transparent"
+            border.width: 1
+            border.color: "#323232"
+            Rectangle {
+                id: engineGaugesTextRight
+                anchors.top: parent.top
+                width: parent.width
+                height: width / 6
+                color: "transparent"
+                Text {
+                    text: qsTr("ENGINE")
+                    anchors.centerIn: parent
+                    font.pixelSize: {
+                        if ((parent.height * 0.65) > 0) {
+                            parent.height * 0.65
+                        } else {
+                            1
+                        }
+                    }
+                    font.bold: true
+                    font.letterSpacing: parent.width / 20
+                    color: "#fb4f14"
+                    opacity: 0.65
+                }
+            }
+
+            RectangularGauge {      // oil temperature gauge
+                id: engineOilTemperatureGauge
+                anchors.top: engineGaugesTextRight.bottom
+                gaugeName: "OIL TEMP"
+                gaugeMin: 50; gaugeMax: 130
+                gaugeDirection: "left"
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: engineOilTemperatureGaugeRepeater
+                    model: 5
+                    delegate: RectangularGaugeLabels {
+                        //labelNumber: parent.gaugeMin + (index * 20)      // left side gauge
+                        labelNumber: parent.gaugeMax - (index * 20)     // right side gauge
+                        labelNumberSize: parent.height / temperatureLabelSize
+                        labelIndex: index
+                        labelCount: engineOilTemperatureGaugeRepeater.model
+                    }
+                }
+            }
+
+            RectangularGauge {      // oil pressure gauge
+                id: engineOilPressureGauge
+                anchors.top: engineOilTemperatureGauge.bottom
+                anchors.topMargin: parent.height * 0.02
+                gaugeName: "OIL PRESSURE"
+                gaugeMin: 0; gaugeMax: 7
+                gaugeDirection: "left"
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: engineOilPressureGaugeRepeater
+                    model: 7
+                    delegate: RectangularGaugeLabels {
+                        //labelNumber: parent.gaugeMin + index      // left side gauge
+                        labelNumber: parent.gaugeMax - index       // right side gauge
+                        labelNumberSize: parent.height / temperatureLabelSize
+                        labelIndex: index
+                        labelCount: engineOilPressureGaugeRepeater.model
+                    }
+                }
+            }
+
+            RectangularGauge {      // water temperature gauge
+                id: engineWaterTemperatureGauge
+                anchors.top: engineOilPressureGauge.bottom
+                anchors.topMargin: parent.height * 0.02
+                gaugeName: "WATER TEMP"
+                gaugeMin: 50; gaugeMax: 130
+                gaugeDirection: "left"
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: engineWaterTemperatureGaugeRepeater
+                    model: 5
+                    delegate: RectangularGaugeLabels {
+                        //labelNumber: parent.gaugeMin + (index * 20)      // left side gauge
+                        labelNumber: parent.gaugeMax - (index * 20)     // right side gauge
+                        labelNumberSize: parent.height / temperatureLabelSize
+                        labelIndex: index
+                        labelCount: engineWaterTemperatureGaugeRepeater.model
+                    }
+                }
+            }
+        }
+    }
+
     Rectangle {     // turn signals
         id: turnSignals
         anchors.horizontalCenter: mainGauges.horizontalCenter
@@ -182,4 +376,8 @@ Window {
     ControlEngine {
         visible: true
     }
+
+//    Component.onCompleted: {
+//        console.log("Component.onCompleted")
+//    }
 }

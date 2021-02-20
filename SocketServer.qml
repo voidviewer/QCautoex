@@ -9,11 +9,28 @@ Item {
         var gaugeValue = gaugeIn.substring(2)
 
         switch(gaugeType) {
+        case "Wb":
+            switch(gaugeValue) {
+            case "1":
+                window.flags = "FramelessWindowHint"
+                break;
+            case "0":
+                window.flags = 1
+                break;
+            default:
+                break;
+            }
+            break;
+        case "Ws":
+            window.height = gaugeValue;
+            window.width = gaugeValue * 4;
+            break;
         case "R ":
             gaugeValue = gaugeValue * (270 / 9000)
             revMeter.needleRotation = gaugeValue;
             break;
         case "S ":
+            speedDisplay.speedValue = gaugeValue;
             gaugeValue = gaugeValue * (270 / 360)
             speedoMeter.needleRotation = gaugeValue;
             break;
@@ -25,6 +42,18 @@ Item {
             break;
         case "Eo":
             engineOilTemperatureGauge.gaugeValue = gaugeValue
+            break;
+        case "Ep":
+            engineOilPressureGauge.gaugeValue = gaugeValue
+            break;
+        case "Et":
+            engineWaterTemperatureGauge.gaugeValue = gaugeValue
+            break;
+        case "To":
+            transmissionOilTemperatureGauge.gaugeValue = gaugeValue
+            break;
+        case "Tp":
+            transmissionOilPressureGauge.gaugeValue = gaugeValue
             break;
         default:
             break;

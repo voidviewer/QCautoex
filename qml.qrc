@@ -13,5 +13,7 @@
         <file>CircularGaugeLabels.qml</file>
         <file>GearDisplay.qml</file>
         <file>RectangularGauge.qml</file>
+        <file>RectangularGaugeLabels.qml</file>
+        <file>SpeedDisplay.qml</file>
     </qresource>
 </RCC>
