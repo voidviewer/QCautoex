@@ -1,3 +1,6 @@
+//
+// Module contains buttons for controlling data generation.
+//
 import QtQuick 2.0
 
 Item {
@@ -10,11 +13,7 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: buttonSpacing
         onClicked: {
-            rpmTimer.running = !rpmTimer.running
-            speedTimer.running = !speedTimer.running
-            turnSignals.running = !turnSignals.running
-            gearTimer.running = !gearTimer.running
-            engineOilTemperatureTimer.running = !engineOilTemperatureTimer.running
+            toggleEngine()
         }
     }
     DefaultButton {
@@ -23,41 +22,59 @@ Item {
         anchors.left: startStopButton.right
         anchors.leftMargin: buttonSpacing
         onClicked: {
-            rpmTimer.running = false
-            revMeter.needleRotation = 0
-            sensoryEngine.rpm = 0
-            speedTimer.running = false
-            speedoMeter.needleRotation = 0
-            sensoryEngine.speed = 0
-            turnSignals.running = false
-            turnSignalsItem.resetTurnSignals()
-            gearTimer.running = false
-            gearDisplay.gear = "P"
-            engineOilTemperatureTimer.running = false
-            engineOilTemperatureGauge.gaugeValue = 50
-        }
-    }
-    DefaultButton {
-        id: frameModeButton
-        buttonText: "Toggle frame"
-        anchors.left: resetButton.right
-        anchors.leftMargin: buttonSpacing
-        onClicked: {
-            if (window.flags !== 2048) {
-                window.flags = "FramelessWindowHint"
-            } else {
-                window.flags = 1
-            }
-            console.log("window.flags: " + window.flags);
+            resetEngine()
         }
     }
     DefaultButton {
         id: quitButton
         buttonText: "Quit"
-        anchors.left: frameModeButton.right
+        anchors.left: resetButton.right
         anchors.leftMargin: buttonSpacing
         onClicked: {
             Qt.quit()
         }
+    }
+
+    function toggleEngine() {
+        rpmTimer.running = !rpmTimer.running
+        speedTimer.running = !speedTimer.running
+        turnSignals.running = !turnSignals.running
+        gearTimer.running = !gearTimer.running
+        engineOilTempTimer.running = !engineOilTempTimer.running
+        engineOilPressureTimer.running = !engineOilPressureTimer.running
+        engineWaterTempTimer.running = !engineWaterTempTimer.running
+        transOilTempTimer.running = !transOilTempTimer.running
+        transOilPressureTimer.running = !transOilPressureTimer.running
+        fuelAmountTimer.running = !fuelAmountTimer.running
+        fuelPressureTimer.running = !fuelPressureTimer.running
+    }
+
+    function resetEngine() {
+        rpmTimer.running = false
+        revMeter.needleRotation = 0
+        sensoryEngine.rpm = 0
+        speedTimer.running = false
+        speedoMeter.needleRotation = 0
+        sensoryEngine.speed = 0
+        turnSignals.running = false
+        turnSignalsItem.resetTurnSignals()
+        gearTimer.running = false
+        selectedGear = 0
+        gearDisplay.gear = "P"
+        speedDisplay.speed = "0"
+        engineOilTempTimer.running = false
+        engineOilTempGauge.gaugeValue = 50
+        engineOilPressureTimer.running = false
+        engineOilPressureGauge.gaugeValue = 1
+        engineWaterTempTimer.running = false
+        engineWaterTempGauge.gaugeValue = 50
+        transOilTempTimer.running = false
+        transOilTempGauge.gaugeValue = 50
+        transOilPressureTimer.running = false
+        transOilPressureGauge.gaugeValue = 1
+        fuelAmountTimer.running = false
+        fuelAmountGauge.gaugeValue = 100
+        fuelPressureTimer.running = false
+        fuelPressureGauge.gaugeValue = 0
     }
 }

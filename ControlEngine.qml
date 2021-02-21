@@ -3,7 +3,6 @@
 //
 import QtQuick 2.0
 import QtQuick.Controls 1.4
-//import QtQuick.Controls.Styles 1.4
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtWebSockets 1.0
@@ -13,6 +12,13 @@ Window {
     property int rpm: 0
     property int speed: 0
     property int engineOilTemp: 50
+    property real engineOilPressure: 1
+    property int engineWaterTemp: 50
+    property int transOilTemp: 50
+    property real transOilPressure: 1
+    property int fuelAmount: 100
+    property real fuelPressure: 3.0
+    property int selectedGear: 0
 
     id: sensoryEngine
     title: qsTr("QCautoex - sensory engine")
@@ -29,50 +35,49 @@ Window {
         width: parent.width
         height: parent.height / 2
 
-//        Rectangle {
-//            id: windowFrameToggleRectangle
-//            color: "transparent"
-//            anchors.topMargin: 4
-//            anchors.top: parent.top
-//            width: parent.width * 0.95
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            height: 22
-//            Text {
-//                id: windowFrameToggleText
-//                anchors.verticalCenter: parent.verticalCenter
-//                text: "Show window border "
-//                color: "#ffffff"
-//            }
-//            CheckBox {
-//                id: windowFrameToggle
-//                anchors.left: windowFrameToggleText.right
-//                transform: Scale { xScale: 0.55; yScale: 0.55 }
-//                //anchors.verticalCenter: parent.verticalCenter
-
-//                onCheckStateChanged: {
-//                    if (checked) {
-//                        window.flags = "FramelessWindowHint"
-//                    } else {
-//                        window.flags = 1
-//                    }
-//                }
-//            }
-//        }
-
-        Rectangle {
-            //anchors.top: windowFrameToggleRectangle.bottom
+        Rectangle {     // dashboard window frame toggle
+            id: windowFrameToggleRectangle
+            color: "transparent"
+            anchors.topMargin: 4
             anchors.top: parent.top
-            anchors.topMargin: 8
+            width: parent.width * 0.95
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: 22
+            Text {
+                id: windowFrameToggleText
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Show window frame "
+                color: "#ffffff"
+            }
+            CheckBox {
+                id: windowFrameToggle
+                checked: false
+                anchors.left: windowFrameToggleText.right
+                transform: Scale { xScale: 0.55; yScale: 0.55 }
+                //anchors.verticalCenter: parent.verticalCenter
+
+                onCheckStateChanged: {
+                    if (checked) {
+                        socket.sendTextMessage("Wb0");
+                    } else {
+                        socket.sendTextMessage("Wb1");
+                    }
+                }
+            }
+        }
+
+        Rectangle {     // dashboard window size adjustment
+            anchors.top: windowFrameToggleRectangle.bottom
+            anchors.topMargin: 2
             width: parent.width * 0.95
             anchors.horizontalCenter: parent.horizontalCenter
             Text {
                 id: windowSizeSliderText
-                //anchors.top: controls.bottom
                 height: 22
                 text: "Dashboard size:"
                 color: "#ffffff"
             }
-            Slider {    // dashboard window size adjustment
+            Slider {
                 id: windowSizeSlider
                 width: parent.width * 0.9
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -84,8 +89,7 @@ Window {
                 value: 180
                 to: 480
                 onValueChanged: {
-                    window.height = value;
-                    window.width = value * 4;
+                    socket.sendTextMessage("Ws" + value);
                 }
             }
         }
@@ -115,13 +119,13 @@ Window {
         }
     }
 
-    Rectangle {
+    Rectangle {     // log entry list
         id: logRectangle
         color: "transparent"
         anchors.top: controls.bottom
         anchors.bottom: controlButtons.top
         anchors.margins: 3
-        //anchors.bottomMargin: 28
+        anchors.bottomMargin: 8
         width: parent.width
         border.width: 1
         border.color: "grey"
@@ -130,10 +134,11 @@ Window {
             id: logView
             anchors.fill: logRectangle
             anchors.topMargin: 20
-            anchors.bottomMargin: 20
+            anchors.bottomMargin: 8
             anchors.leftMargin: 6
             anchors.rightMargin: 6
             model: logModel
+            verticalLayoutDirection: ListView.BottomToTop
             delegate: logDelegate
             //highlight: Rectangle { color: "lightsteelblue" }
             focus: true
@@ -171,37 +176,33 @@ Window {
         repeat: true
         interval: 1500
         onTriggered: {
-            var gearList = ["P", "R", "N", "D", "1", "2"]
-            var selectedGear = gearList[Math.floor(Math.random() * gearList.length)];
-
             switch(selectedGear) {
-            case "P":
-                socket.sendTextMessage("G P");
-                logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear parking"})
+            case 0:     // parking gear
+                selectedGear = 1;
                 break;
-            case "R":
-                socket.sendTextMessage("G R");
-                logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear reverse"})
+            case 1:     // reverse gear
+                //selectedGear = [0, 2][Math.floor(Math.random() * 2)];
+                selectedGear = 2;
                 break;
-            case "N":
-                socket.sendTextMessage("G N");
-                logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear neutral"})
+            case 2:     // neutral gear
+                //selectedGear = [1, 3][Math.floor(Math.random() * 2)];
+                selectedGear = 3;
                 break;
-            case "D":
-                socket.sendTextMessage("G D");
-                logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear drive"})
+            case 3:     // drive gear
+                //selectedGear = [2, 4][Math.floor(Math.random() * 2)];
                 break;
-            case "1":
-                socket.sendTextMessage("G 1");
-                logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear 1"})
+            case 4:     // first gear
+                selectedGear = [3, 5][Math.floor(Math.random() * 2)];
                 break;
-            case "2":
-                socket.sendTextMessage("G 2");
-                logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear 2"})
+            case 5:     // second gear
+                selectedGear = 4;
                 break;
             default:
                 break;
             }
+            var gearList = ["P", "R", "N", "D", "1", "2"]
+            socket.sendTextMessage("G " + gearList[selectedGear]);
+            logModel.append({"timeStamp": timeOfDay(), "logEntry": "gear " + gearList[selectedGear]})
         }
     }
 
@@ -225,29 +226,193 @@ Window {
         }
     }
 
-    Timer {     // engine oil temperature
-        id: engineOilTemperatureTimer
-        property int minEngineOilTemp: 50
-        property int maxEngineOilTemp: 130
+    Timer {     // transmission oil Temp
+        id: transOilTempTimer
+        //property int minTransOilTemp: 50
+        //property int maxTransOilTemp: 130
+        property int minTransOilTemp: 65
+        property int maxTransOilTemp: 115
         property bool increasing: true
         repeat: true
-        interval: 2500
+        interval: 100
+        onTriggered: {
+            if (increasing) {
+                if (transOilTemp < maxTransOilTemp) {
+                    transOilTemp += 1
+                } else {
+                    increasing = false
+                }
+            } else {
+                if (transOilTemp > minTransOilTemp) {
+                    transOilTemp -= 1
+                } else {
+                    increasing = true
+                }
+            }
+            socket.sendTextMessage("Gt" + transOilTemp)
+            //logModel.append({"timeStamp": timeOfDay(), "logEntry": "trans oil Temp " + transOilTemp})
+        }
+    }
+
+    Timer {     // transmission oil pressure
+        id: transOilPressureTimer
+        //property real minTransOilPressure: 1
+        //property real maxTransOilPressure: 7
+        property real minTransOilPressure: 2.5
+        property real maxTransOilPressure: 5.5
+        property bool increasing: true
+        repeat: true
+        interval: 50
+        onTriggered: {
+            if (increasing) {
+                if (transOilPressure < maxTransOilPressure) {
+                    transOilPressure += 0.05
+                } else {
+                    increasing = false
+                }
+            } else {
+                if (transOilPressure > minTransOilPressure) {
+                    transOilPressure -= 0.05
+                } else {
+                    increasing = true
+                }
+            }
+            socket.sendTextMessage("Gp" + transOilPressure)
+            //logModel.append({"timeStamp": timeOfDay(), "logEntry": "transmission oil pressure " + transOilPressure})
+        }
+    }
+
+    Timer {     // engine oil Temp
+        id: engineOilTempTimer
+        //property int minEngineOilTemp: 50
+        //property int maxEngineOilTemp: 130
+        property int minEngineOilTemp: 70
+        property int maxEngineOilTemp: 105
+        property bool increasing: true
+        repeat: true
+        interval: 100
         onTriggered: {
             if (increasing) {
                 if (engineOilTemp < maxEngineOilTemp) {
-                    engineOilTemp += 5
+                    engineOilTemp += 1
                 } else {
                     increasing = false
                 }
             } else {
                 if (engineOilTemp > minEngineOilTemp) {
-                    engineOilTemp -= 5
+                    engineOilTemp -= 1
                 } else {
                     increasing = true
                 }
             }
             socket.sendTextMessage("Eo" + engineOilTemp)
-            logModel.append({"timeStamp": timeOfDay(), "logEntry": "engine oil temperature " + engineOilTemp})
+            //logModel.append({"timeStamp": timeOfDay(), "logEntry": "engine oil Temp " + engineOilTemp})
+        }
+    }
+
+    Timer {     // engine oil pressure
+        id: engineOilPressureTimer
+        //property int minEngineOilPressure: 1
+        //property int maxEngineOilPressure: 7
+        property real minEngineOilPressure: 2.5
+        property real maxEngineOilPressure: 5.5
+        property bool increasing: true
+        repeat: true
+        interval: 50
+        onTriggered: {
+            if (increasing) {
+                if (engineOilPressure < maxEngineOilPressure) {
+                    engineOilPressure += 0.05
+                } else {
+                    increasing = false
+                }
+            } else {
+                if (engineOilPressure > minEngineOilPressure) {
+                    engineOilPressure -= 0.05
+                } else {
+                    increasing = true
+                }
+            }
+            socket.sendTextMessage("Ep" + engineOilPressure)
+        }
+    }
+
+    Timer {     // engine water Temp
+        id: engineWaterTempTimer
+        //property int minEngineWaterTemp: 50
+        //property int maxEngineWaterTemp: 130
+        property int minEngineWaterTemp: 65
+        property int maxEngineWaterTemp: 110
+        property bool increasing: true
+        repeat: true
+        interval: 100
+        onTriggered: {
+            if (increasing) {
+                if (engineWaterTemp < maxEngineWaterTemp) {
+                    engineWaterTemp += 1
+                } else {
+                    increasing = false
+                }
+            } else {
+                if (engineWaterTemp > minEngineWaterTemp) {
+                    engineWaterTemp -= 1
+                } else {
+                    increasing = true
+                }
+            }
+            socket.sendTextMessage("Et" + engineWaterTemp)
+            //logModel.append({"timeStamp": timeOfDay(), "logEntry": "engine water Temp " + engineWaterTemp})
+        }
+    }
+
+    Timer {     // fuel amount
+        id: fuelAmountTimer
+        property int minFuelAmount: 1
+        property int maxFuelAmount: 100
+        property bool increasing: false
+        repeat: true
+        interval: 100
+        onTriggered: {
+            if (increasing) {
+                if (fuelAmount < maxFuelAmount) {
+                    fuelAmount += 1
+                } else {
+                    increasing = false
+                }
+            } else {
+                if (fuelAmount > minFuelAmount) {
+                    fuelAmount -= 1
+                } else {
+                    increasing = true
+                }
+            }
+            socket.sendTextMessage("Fa" + fuelAmount)
+            //logModel.append({"timeStamp": timeOfDay(), "logEntry": "fuel amount " + fuelAmount})
+        }
+    }
+
+    Timer {     // engine fuel pressure
+        id: fuelPressureTimer
+        property real minFuelPressure: 2.5
+        property real maxFuelPressure: 5.5
+        property bool increasing: true
+        repeat: true
+        interval: 50
+        onTriggered: {
+            if (increasing) {
+                if (fuelPressure < maxFuelPressure) {
+                    fuelPressure += 0.05
+                } else {
+                    increasing = false
+                }
+            } else {
+                if (fuelPressure > minFuelPressure) {
+                    fuelPressure -= 0.05
+                } else {
+                    increasing = true
+                }
+            }
+            socket.sendTextMessage("Fp" + fuelPressure)
         }
     }
 

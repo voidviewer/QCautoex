@@ -5,17 +5,20 @@ import QtQuick 2.7
 import QtQuick.Shapes 1.15
 
 Item {
-    property int gaugeValue: 50
-    property int gaugeRange: 80
+    property real gaugeValue: 500   // has to be bigger than any max gauge value
+    property int gaugeMin: 0
+    property int gaugeMax: 1
     property string gaugeName: "*"
+    property string gaugeDirection: "right"
+    property string gradientDirection: "right"
 
     Rectangle {
-        id: gaugeRectangle     // gauge border
+        id: gaugeRectangle  // gauge border
         width: parent.width
         height: parent.height
         color: "transparent"
         border.color: "#969696"
-        border.width: parent.height * 0.07
+        border.width: parent.height * 0.045
 
         Rectangle {         // gauge background
             anchors.centerIn: parent
@@ -26,33 +29,55 @@ Item {
         }
         Rectangle {     // slider background
             id: gaugeNeedle
-            width: parent.height * 0.45
+            width: parent.height * 0.225
             height: parent.width * 0.9
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: parent.height * -0.17
-            color: "#00cccc"
-            rotation: -90
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "blue" }
+            anchors.verticalCenterOffset: parent.height * -0.3
+            //color: "#00cccc"
+            opacity: 0.9
+            rotation: {
+                if (gaugeDirection == "right") {
+                    -90
+                } else {
+                    90
+                }
+            }
+
+            Gradient {
+                id: gaugeGradientRight
+                GradientStop { position: 0.0; color: "#1e90ff" }
                 GradientStop { position: 0.35; color: "#0bda51" }
                 GradientStop { position: 0.65; color: "#0bda51" }
                 GradientStop { position: 1.0; color: "#ff0000" }
             }
+            Gradient {
+                id: gaugeGradientLeft
+                GradientStop { position: 1.0; color: "#1e90ff" }
+                GradientStop { position: 0.65; color: "#0bda51" }
+                GradientStop { position: 0.35; color: "#0bda51" }
+                GradientStop { position: 0.0; color: "#ff0000" }
+            }
+            gradient: {
+                if (gradientDirection == "right") {
+                    gaugeGradientRight
+                } else {
+                    gaugeGradientLeft
+                }
+            }
 
-            //opacity: 0.4
             Rectangle {     // slider
                 id: gaugeSlider
                 width: parent.width
-                height: parent.height - (parent.height - ((parent.height / gaugeRange) * (130 - gaugeValue)))
+                height: parent.height - (parent.height - ((parent.height / (gaugeMax - gaugeMin)) * (gaugeMax - gaugeValue)))
                 anchors.bottom: parent.bottom
                 color: "#161616"
-                opacity: 1
+                opacity: 0.8
             }
         }
         Text {      // gauge description text
             anchors.centerIn: parent
             transform: Scale { yScale: 0.75 }
-            anchors.verticalCenterOffset: parent.height * 0.28
+            anchors.verticalCenterOffset: parent.height * 0.3
             text: gaugeName
             font.pixelSize: {
                 if ((parent.height * 0.25) > 0) {

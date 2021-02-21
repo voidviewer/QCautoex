@@ -21,7 +21,7 @@ Window {
     property real rpmValue: 0
     property int revLabelSize: 7
     property int speedLabelSize: 14
-    property int oilTempLabelSize: 10
+    property int sideGaugeLabelSize: 5
     property real revLabelCenterMultiplierX: 0.0
     property real revLabelCenterMultiplierY: 0.0
     property real speedLabelCenterMultiplierX: 0.0
@@ -67,32 +67,86 @@ Window {
         anchors.left: windowBorder.left
         anchors.right: mainGauges.left
         anchors.bottom: windowBorder.bottom
-        anchors.topMargin: defaultMargin
-        anchors.bottomMargin: defaultMargin
-        anchors.leftMargin: defaultMargin
+        anchors.margins: defaultMargin
         anchors.rightMargin: defaultMargin / 2
         color: "transparent"
         border.width: 1
         border.color: "#484848"
 
-        RectangularGauge {     // oil temperature gauge
-            id: engineOilTemperatureGauge
+        Rectangle {     // transmission gauges
+            id: gaugeGroupLeft
             anchors.top: parent.top
             anchors.right: parent.right
-            gaugeName: "OIL TEMP"
-            height: window.height * 0.165
-            width: height * 2
+            height: parent.height
+            width: parent.height * 0.5
+            color: "transparent"
+            border.width: 1
+            border.color: "#323232"
+            Rectangle {
+                id: engineGaugesTextLeft
+                anchors.top: parent.top
+                width: parent.width
+                height: width / 6
+                color: "transparent"
+                Text {
+                    text: qsTr("TRANSMISSION")
+                    anchors.centerIn: parent
+                    font.pixelSize: {
+                        if ((parent.height * 0.65) > 0) {
+                            parent.height * 0.65
+                        } else {
+                            1
+                        }
+                    }
+                    font.bold: true
+                    //font.letterSpacing: parent.width / 20
+                    color: "#fb4f14"
+                    opacity: 0.65
+                }
+            }
 
-//            Repeater {      // oil temperature value labels
-//                model: 5
-//                delegate: CircularGaugeLabels {
-//                    labelNumber: 50 + (index * 20)
-//                    labelNumberSize: parent.height / oilTempLabelSize
-//                    labelRotation: 45 + ((index + 1) * 30)
-//                    gaugeLabelCenterMultiplierX: 0
-//                    gaugeLabelCenterMultiplierY: 0
-//                }
-//            }
+            RectangularGauge {      // oil Temp gauge
+                id: transOilTempGauge
+                anchors.top: engineGaugesTextLeft.bottom
+                gaugeName: "OIL TEMP"
+                gaugeMin: 50; gaugeMax: 130
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: transOilTempGaugeRptr
+                    model: 5
+                    delegate: RectangularGaugeLabels {
+                        labelNumber: 50 + (index * 20)      // left side gauge
+                        //labelNumber: 130 - (index * 20)     // right side gauge
+                        labelNumberSize: parent.height / sideGaugeLabelSize
+                        labelIndex: index
+                        labelCount: transOilTempGaugeRptr.model
+                    }
+                }
+            }
+
+            RectangularGauge {      // oil pressure gauge
+                id: transOilPressureGauge
+                anchors.top: transOilTempGauge.bottom
+                anchors.topMargin: parent.height * 0.02
+                gaugeName: "OIL PRESSURE"
+                gaugeMin: 1; gaugeMax: 7
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: transOilPressureGaugeRptr
+                    model: 7
+                    delegate: RectangularGaugeLabels {
+                        labelNumber: 1 + index      // left side gauge
+                        //labelNumber: 130 - (index * 20)     // right side gauge
+                        labelNumberSize: parent.height / sideGaugeLabelSize
+                        labelIndex: index
+                        labelCount: transOilPressureGaugeRptr.model
+                    }
+                }
+            }
         }
     }
 
@@ -131,6 +185,10 @@ Window {
                     gaugeLabelCenterMultiplierY: revLabelCenterMultiplierY
                 }
             }
+
+            SpeedDisplay {
+                id: speedDisplay
+            }
         }
 
         CircularGauge {     // speed gauge
@@ -155,6 +213,201 @@ Window {
 
             GearDisplay {   // gear display
                 id: gearDisplay
+            }
+        }
+    }
+
+    Rectangle {     // right side gadgets
+        id: engineGauges
+        property int defaultMargin : window.height / 6.5
+        anchors.top: windowBorder.top
+        anchors.left: mainGauges.right
+        anchors.right: windowBorder.right
+        anchors.bottom: windowBorder.bottom
+        anchors.margins: defaultMargin
+        anchors.leftMargin: defaultMargin / 2
+        color: "transparent"
+        border.width: 1
+        border.color: "#484848"
+
+        Rectangle {     // engine gauges
+            id: engineGaugesRight
+            anchors.top: parent.top
+            anchors.left: parent.left
+            height: parent.height
+            width: parent.height * 0.5
+            color: "transparent"
+            border.width: 1
+            border.color: "#323232"
+            Rectangle {
+                id: engineGaugesTextRight
+                anchors.top: parent.top
+                width: parent.width
+                height: width / 6
+                color: "transparent"
+                Text {
+                    text: qsTr("ENGINE")
+                    anchors.centerIn: parent
+                    font.pixelSize: {
+                        if ((parent.height * 0.65) > 0) {
+                            parent.height * 0.65
+                        } else {
+                            1
+                        }
+                    }
+                    font.bold: true
+                    font.letterSpacing: parent.width / 20
+                    color: "#fb4f14"
+                    opacity: 0.65
+                }
+            }
+
+            RectangularGauge {      // oil Temp gauge
+                id: engineOilTempGauge
+                anchors.top: engineGaugesTextRight.bottom
+                gaugeName: "OIL TEMP"
+                gaugeMin: 50; gaugeMax: 130
+                gaugeDirection: "left"
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: engineOilTempGaugeRptr
+                    model: 5
+                    delegate: RectangularGaugeLabels {
+                        //labelNumber: 50 + (index * 20)      // left side gauge
+                        labelNumber: 130 - (index * 20)     // right side gauge
+                        labelNumberSize: parent.height / sideGaugeLabelSize
+                        labelIndex: index
+                        labelCount: engineOilTempGaugeRptr.model
+                    }
+                }
+            }
+
+            RectangularGauge {      // oil pressure gauge
+                id: engineOilPressureGauge
+                anchors.top: engineOilTempGauge.bottom
+                anchors.topMargin: parent.height * 0.02
+                gaugeName: "OIL PRESSURE"
+                gaugeMin: 1; gaugeMax: 7
+                gaugeDirection: "left"
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: engineOilPressureGaugeRptr
+                    model: 7
+                    delegate: RectangularGaugeLabels {
+                        //labelNumber: 1 + index      // left side gauge
+                        labelNumber: 7 - index     // right side gauge
+                        labelNumberSize: parent.height / sideGaugeLabelSize
+                        labelIndex: index
+                        labelCount: engineOilPressureGaugeRptr.model
+                    }
+                }
+            }
+
+            RectangularGauge {      // water Temp gauge
+                id: engineWaterTempGauge
+                anchors.top: engineOilPressureGauge.bottom
+                anchors.topMargin: parent.height * 0.02
+                gaugeName: "WATER TEMP"
+                gaugeMin: 50; gaugeMax: 130
+                gaugeDirection: "left"
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: engineWaterTempGaugeRprt
+                    model: 5
+                    delegate: RectangularGaugeLabels {
+                        //labelNumber: 50 + (index * 20)      // left side gauge
+                        labelNumber: 130 - (index * 20)     // right side gauge
+                        labelNumberSize: parent.height / sideGaugeLabelSize
+                        labelIndex: index
+                        labelCount: engineWaterTempGaugeRprt.model
+                    }
+                }
+            }
+        }
+
+        Rectangle {     // range gauges
+            id: rangeGaugesRight
+            anchors.top: parent.top
+            anchors.left: engineGaugesRight.right
+            height: parent.height
+            width: parent.height * 0.5
+            color: "transparent"
+            border.width: 1
+            border.color: "#323232"
+            Rectangle {
+                id: rangeGaugesTextRight
+                anchors.top: parent.top
+                //anchors.right: 0
+                width: parent.width
+                height: width / 6
+                color: "transparent"
+                Text {
+                    text: qsTr("FUEL")
+                    anchors.centerIn: parent
+                    font.pixelSize: {
+                        if ((parent.height * 0.65) > 0) {
+                            parent.height * 0.65
+                        } else {
+                            1
+                        }
+                    }
+                    font.bold: true
+                    font.letterSpacing: parent.width / 10
+                    color: "#fb4f14"
+                    opacity: 0.65
+                }
+            }
+
+            RectangularGauge {      // fuel gauge
+                id: fuelAmountGauge
+                anchors.top: rangeGaugesTextRight.bottom
+                gaugeName: "LITRES"
+                gaugeMin: 0; gaugeMax: 100
+                gaugeDirection: "right"
+                gradientDirection: "left"
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: fuelGaugeRptr
+                    model: 6
+                    delegate: RectangularGaugeLabels {
+                        //labelNumber: 50 + (index * 20)      // left side gauge
+                        labelNumber: fuelAmountGauge.gaugeMax - (index * 20)     // right side gauge
+                        labelNumberSize: parent.height / sideGaugeLabelSize
+                        labelIndex: fuelGaugeRptr.model - index - 1
+                        labelCount: fuelGaugeRptr.model
+                    }
+                }
+            }
+
+            RectangularGauge {      // fuel pressure gauge
+                id: fuelPressureGauge
+                anchors.top: fuelAmountGauge.bottom
+                anchors.topMargin: parent.height * 0.02
+                gaugeName: "FUEL PRESSURE"
+                gaugeMin: 1; gaugeMax: 7
+                gaugeDirection: "left"
+                width: parent.width
+                height: width / 2
+
+                Repeater {          // gauge labels
+                    id: fuelPressureGaugeRptr
+                    model: 7
+                    delegate: RectangularGaugeLabels {
+                        //labelNumber: 1 + index      // left side gauge
+                        labelNumber: 7 - index     // right side gauge
+                        labelNumberSize: parent.height / sideGaugeLabelSize
+                        labelIndex: index
+                        labelCount: fuelPressureGaugeRptr.model
+                    }
+                }
             }
         }
     }

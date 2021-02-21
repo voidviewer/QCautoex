@@ -1,12 +1,12 @@
 //
-// Module displays current gear inside main gauge.
+// Module displays current speed inside main gauge.
 //
 import QtQuick 2.0
 
-Rectangle {     // gear display
-    property string gear: "P"
+Rectangle {
+    property string speed: "0"
 
-    width: parent.width / 7
+    width: parent.width / 3
     height: parent.height / 5
     anchors.bottom: parent.bottom
     anchors.bottomMargin: window.height * 0.07
@@ -16,8 +16,8 @@ Rectangle {     // gear display
     border.width: 1
     border.color: "#484848"
 
-    Text {      // gear value
-        text: gear
+    Text {      // speed value
+        text: speed
         anchors.centerIn: parent
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
