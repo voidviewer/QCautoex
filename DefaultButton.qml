@@ -1,3 +1,6 @@
+//
+// Module provides base item for control module buttons.
+//
 import QtQuick 2.0
 import QtQuick.Controls 2.15
 
@@ -12,8 +15,8 @@ Button {
     }
     background: Rectangle {
         color: {
-            hovered ? "Sienna" : "transparent"
             //pressed ? "grey" : "transparent"
+            hovered ? "#646464" : "transparent"
         }
         border.width: 1
         border.color: "grey"

@@ -5,7 +5,6 @@ import QtQuick 2.0
 import QtQuick.Shapes 1.15
 
 Item {
-    //property int turnSignalSize: 32
     property int turnSignalSize: window.height * 0.067
     property string signalValue: "o"
     property string lightOn: "#90ee90"

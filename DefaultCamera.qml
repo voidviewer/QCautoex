@@ -1,3 +1,6 @@
+//
+//  Module acts as mirror.
+//
 import QtQuick 2.0
 import QtMultimedia 5.15
 
@@ -23,7 +26,7 @@ Item {
 
         imageCapture {
             onImageCaptured: {
-                photoPreview.source = preview  // Show the preview in an Image
+                photoPreview.source = preview   // Show the preview in an Image
             }
         }
     }
@@ -32,7 +35,7 @@ Item {
         id: cameraOutput
         source: camera
         anchors.fill: parent
-        focus : visible // to receive focus and capture key events when visible
+        focus : visible     // to receive focus and capture key events when visible
         fillMode: VideoOutput.PreserveAspectCrop
     }
 

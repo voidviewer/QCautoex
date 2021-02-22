@@ -1,3 +1,7 @@
+//
+// Module receives dashboard data from client,
+// parses the data and applies it to dashboard gadgets.
+//
 import QtQuick 2.0
 import QtWebSockets 1.0
 
@@ -9,6 +13,9 @@ Item {
         var gaugeValue = gaugeIn.substring(2)
 
         switch(gaugeType) {
+        case "Ar":  // engine stop
+            engineRunning = false
+            break;
         case "Wb":
             switch(gaugeValue) {
             case "1":
@@ -61,6 +68,9 @@ Item {
         case "Fp":
             fuelPressureGauge.gaugeValue = gaugeValue
             break;
+        case "Dm":
+            clockGauge.gaugeValue = gaugeValue
+            break;
         default:
             break;
         }
@@ -72,6 +82,7 @@ Item {
         onClientConnected: {
             webSocket.onTextMessageReceived.connect(function(gaugeIn) {
                 setGauge(qsTr("%1").arg(gaugeIn));
+                //webSocket.sendTextMessage(qsTr("Hello Client!"));
             });
         }
         onErrorStringChanged: {
@@ -83,9 +94,10 @@ Item {
         id: socket
         url: server.url
         active: true
-        onTextMessageReceived: {
-            console.log(timeOfDay() + " Server received message: " + socket.textMessageReceived())
-        }
+//        onTextMessageReceived: {
+//            sendTextMessage(qsTr("Hello Server!"));
+//            console.log(timeOfDay() + " Server received message: " + socket.textMessageReceived())
+//        }
         onStatusChanged: {
             if (socket.status == WebSocket.Error) {
                 console.log(timeOfDay() + " Server received message: " + socket.errorString)

@@ -1,24 +1,27 @@
 //
-// Module displays current speed inside main gauge.
+// Module displays time of day.
 //
 import QtQuick 2.0
+import QtQml 2.0
 
 Rectangle {
-    property string speed: "0"
+    property string gaugeValue: "0"
 
-    width: parent.width / 3
-    height: parent.height / 5
-    anchors.bottom: parent.bottom
-    anchors.bottomMargin: window.height * 0.07
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.leftMargin: 0
+    width: parent.width
+    height: parent.height
+    anchors.centerIn: parent
     color: "transparent"
     border.width: appDebug ? 1 : 0
     border.color: appDebug ? "#484848" : "transparent"
 
-    Text {      // speed value
-        text: speed
-        anchors.centerIn: parent
+    Text {  // time value
+        text: {
+            var hour = Math.floor(gaugeValue / 60)
+            var minute = gaugeValue - (Math.floor(gaugeValue / 60)) * 60
+            if (minute < 10) minute = "0" + minute
+            hour + ":" + minute
+        }
+        anchors.right: parent.right
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         color: "#00cccc"

@@ -1,3 +1,6 @@
+//
+// Module acts as rear view mirror.
+//
 import QtQuick 2.0
 import QtQuick.Window 2.15
 

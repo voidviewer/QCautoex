@@ -7,22 +7,31 @@ Item {
     property int buttonHeight: 24
     property int buttonSpacing: 4
 
-    DefaultButton {
-        id: startStopButton
-        buttonText: "Start/Stop"
-        anchors.left: parent.left
-        anchors.leftMargin: buttonSpacing
-        onClicked: {
-            toggleEngine()
-        }
-    }
+    property bool startStop: false
+    onStartStopChanged: toggleEngine()
+    property bool reset: false
+    onResetChanged: !engineRunning ? resetEngine() : {}
+
+//    DefaultButton {
+//        id: startStopButton
+//        buttonText: "Start/Stop"
+//        anchors.left: parent.left
+//        anchors.leftMargin: buttonSpacing
+//        onClicked: {
+//            toggleEngine()
+//        }
+//    }
     DefaultButton {
         id: resetButton
         buttonText: "Reset"
-        anchors.left: startStopButton.right
+        //anchors.left: startStopButton.right
+        anchors.left: parent.left
         anchors.leftMargin: buttonSpacing
         onClicked: {
             resetEngine()
+            windowFrameToggle.checked = false
+            windowSizeSlider.value = windowSizeSlider.from
+            logModel.clear()
         }
     }
     DefaultButton {
@@ -47,9 +56,41 @@ Item {
         transOilPressureTimer.running = !transOilPressureTimer.running
         fuelAmountTimer.running = !fuelAmountTimer.running
         fuelPressureTimer.running = !fuelPressureTimer.running
+        clockTimer.running = !clockTimer.running
+
+//        if (!engineRunning) {
+//            console.log("!engineRunning")
+//            rpmTimer.running = true
+//            speedTimer.running = true
+//            turnSignals.running = true
+//            gearTimer.running = true
+//            engineOilTempTimer.running = true
+//            engineOilPressureTimer.running = true
+//            engineWaterTempTimer.running = true
+//            transOilTempTimer.running = true
+//            transOilPressureTimer.running = true
+//            fuelAmountTimer.running = true
+//            fuelPressureTimer.running = true
+//            clockTimer.running = true
+//        } else {
+//            console.log("engineRunning")
+//            rpmTimer.running = false
+//            speedTimer.running = false
+//            turnSignals.running = false
+//            gearTimer.running = false
+//            engineOilTempTimer.running = false
+//            engineOilPressureTimer.running = false
+//            engineWaterTempTimer.running = false
+//            transOilTempTimer.running = false
+//            transOilPressureTimer.running = false
+//            fuelAmountTimer.running = false
+//            fuelPressureTimer.running = false
+//            clockTimer.running = false
+//        }
     }
 
     function resetEngine() {
+        socket.sendTextMessage("Ar0");
         rpmTimer.running = false
         revMeter.needleRotation = 0
         sensoryEngine.rpm = 0
@@ -76,5 +117,7 @@ Item {
         fuelAmountGauge.gaugeValue = 100
         fuelPressureTimer.running = false
         fuelPressureGauge.gaugeValue = 0
+        clockTimer.running = false
+        clockGauge.gaugeValue = 0
     }
 }

@@ -46,7 +46,8 @@ Item {
             transform: Rotation {
                 origin.x: gaugeNeedle.width / 2;
                 origin.y: gaugeCircle.y;
-                angle: 45 + needleRotation
+                //angle: 45 + needleRotation
+                angle: engineRunning ? 45 + needleRotation : 45
             }
             Shape {     // needle center
                 ShapePath {

@@ -1,3 +1,6 @@
+//
+//  Module contains dashdoard and its gadgets.
+//
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
@@ -17,6 +20,7 @@ Window {
         y = (Screen.height / 2) - (height / 2)
     }
 
+    property bool appDebug: false
     property real mirrorOpacity: 0.0
     property real rpmValue: 0
     property int revLabelSize: 7
@@ -26,6 +30,7 @@ Window {
     property real revLabelCenterMultiplierY: 0.0
     property real speedLabelCenterMultiplierX: 0.0
     property real speedLabelCenterMultiplierY: 0.065
+    property bool engineRunning: false
 
     Image {
         source: "images/background.png"
@@ -50,17 +55,6 @@ Window {
         }
     }
 
-//    Rectangle {     // dashboard decoration
-//        id: upperDecorationBar
-//        width: window.width * 0.95
-//        height: window.height * 0.15
-//        color: "#646464"
-//        border.width: window.height * 0.01
-//        border.color: "#323232"
-//        anchors.centerIn: parent
-//        anchors.verticalCenterOffset: window.height * -0.25
-//    }
-
     Rectangle {     // left side gadgets
         property int defaultMargin : window.height / 6.5
         anchors.top: windowBorder.top
@@ -70,8 +64,44 @@ Window {
         anchors.margins: defaultMargin
         anchors.rightMargin: defaultMargin / 2
         color: "transparent"
-        border.width: 1
-        border.color: "#484848"
+        border.width: appDebug ? 1 : 0
+        border.color: appDebug ? "#484848" : "transparent"
+
+        Rectangle {     // clock
+            anchors.left: parent.left
+            anchors.top: parent.top
+            width: parent.width / 3.5
+            height: parent.height / 6
+            color: "transparent"
+            ClockDisplay {
+                id: clockGauge
+                anchors.right: parent.right
+            }
+        }
+
+        Rectangle {   // Start/stop button.
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            width: parent.width * 0.2; height: width
+            radius: width / 2
+            color: "#646464"
+            Rectangle {
+                anchors.centerIn: parent
+                width: parent.width * 0.96; height: width;
+                radius: width / 2
+                color: "transparent"
+                border.width: 1.5
+                border.color: "#000000"
+                DashboardButton {
+                    anchors.centerIn: parent
+                    onClicked: {
+                        engineRunning = !engineRunning
+                        controlEngine.engineStarted = !controlEngine.engineStarted
+                    }
+                    buttonText: engineRunning ? "STOP" : "START"
+                }
+            }
+        }
 
         Rectangle {     // transmission gauges
             id: gaugeGroupLeft
@@ -80,8 +110,8 @@ Window {
             height: parent.height
             width: parent.height * 0.5
             color: "transparent"
-            border.width: 1
-            border.color: "#323232"
+            border.width: appDebug ? 1 : 0
+            border.color: appDebug ? "#323232" : "transparent"
             Rectangle {
                 id: engineGaugesTextLeft
                 anchors.top: parent.top
@@ -163,8 +193,8 @@ Window {
         color: "transparent"
         anchors.centerIn: windowBorder
         anchors.margins: 2
-        border.width: 1
-        border.color: "#484848"
+        border.width: appDebug ? 1 : 0
+        border.color: appDebug ? "#484848" : "transparent"
 
         CircularGauge {     // revolutions gauge
             id: revMeter
@@ -227,8 +257,8 @@ Window {
         anchors.margins: defaultMargin
         anchors.leftMargin: defaultMargin / 2
         color: "transparent"
-        border.width: 1
-        border.color: "#484848"
+        border.width: appDebug ? 1 : 0
+        border.color: appDebug ? "#484848" : "transparent"
 
         Rectangle {     // engine gauges
             id: engineGaugesRight
@@ -237,8 +267,8 @@ Window {
             height: parent.height
             width: parent.height * 0.5
             color: "transparent"
-            border.width: 1
-            border.color: "#323232"
+            border.width: appDebug ? 1 : 0
+            border.color: appDebug ? "#323232" : "transparent"
             Rectangle {
                 id: engineGaugesTextRight
                 anchors.top: parent.top
@@ -338,8 +368,8 @@ Window {
             height: parent.height
             width: parent.height * 0.5
             color: "transparent"
-            border.width: 1
-            border.color: "#323232"
+            border.width: appDebug ? 1 : 0
+            border.color: appDebug ? "#323232" : "transparent"
             Rectangle {
                 id: rangeGaugesTextRight
                 anchors.top: parent.top
@@ -424,15 +454,16 @@ Window {
         }
     }
 
+    ControlEngine {
+        id: controlEngine
+        visible: true
+    }
+
     SocketServer {
         id: socketServer
     }
 
     function timeOfDay () {
         return Qt.formatTime(new(Date), "hh:mm:ss.zzz")
-    }
-
-    ControlEngine {
-        visible: true
     }
 }

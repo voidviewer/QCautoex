@@ -1,3 +1,6 @@
+//
+// Module draws labels for circular gauges.
+//
 import QtQuick 2.0
 
 Rectangle {

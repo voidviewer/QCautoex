@@ -13,8 +13,8 @@ Rectangle {     // gear display
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.leftMargin: 0
     color: "transparent"
-    border.width: 1
-    border.color: "#484848"
+    border.width: appDebug ? 1 : 0
+    border.color: appDebug ? "#484848" : "transparent"
 
     Text {      // gear value
         text: gear

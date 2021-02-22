@@ -1,5 +1,5 @@
 //
-// Module generates vehicle, environment and traffic data for dashdoard module.
+// Module generates vehicle and environment for dashdoard module.
 //
 import QtQuick 2.0
 import QtQuick.Controls 1.4
@@ -19,21 +19,27 @@ Window {
     property int fuelAmount: 100
     property real fuelPressure: 3.0
     property int selectedGear: 0
+    property bool engineStarted: false
 
     id: sensoryEngine
-    title: qsTr("QCautoex - sensory engine")
+    title: qsTr("QCautoex - control engine")
     maximumWidth: 280; maximumHeight: 480; minimumWidth: 280; minimumHeight: 480
     x: screen.width - 280
     y: (screen.height / 2) - (height / 2)
     color: "#323232"
 
-    Rectangle {
+    onEngineStartedChanged: {
+        controlButtonsItem.startStop = !controlButtonsItem.startStop
+        controlButtonsItem.reset = !controlButtonsItem.reset
+    }
+
+    Rectangle {     // dashboard window controls
         id: controls
         color: "transparent"
         border.width: 1
         border.color: "grey"
         width: parent.width
-        height: parent.height / 2
+        height: parent.height / 3
 
         Rectangle {     // dashboard window frame toggle
             id: windowFrameToggleRectangle
@@ -161,9 +167,9 @@ Window {
         id: socket
         url: socketServer.serverUrl
         active: true
-        //onTextMessageReceived: {
-        //    console.log(qsTr(timeOfDay() + " Client received message: " + message))
-        //}
+        onTextMessageReceived: {
+            console.log(qsTr(timeOfDay() + " Client received message: " + message))
+        }
         onStatusChanged: {
             if (socket.status == WebSocket.Error) {
                 console.log("Client error: " + socket.errorString)
@@ -461,6 +467,17 @@ Window {
                 }
             }
             socket.sendTextMessage("S " + speed)
+        }
+    }
+
+    Timer {     // time of day
+        id: clockTimer
+        property int dayMinute: 0
+        repeat: true
+        interval: 20
+        onTriggered: {
+            if (dayMinute++ >= 1440) dayMinute = 0
+            socket.sendTextMessage("Dm" + dayMinute)
         }
     }
 }

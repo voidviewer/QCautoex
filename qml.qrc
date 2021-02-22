@@ -15,5 +15,7 @@
         <file>RectangularGauge.qml</file>
         <file>RectangularGaugeLabels.qml</file>
         <file>SpeedDisplay.qml</file>
+        <file>DashboardButton.qml</file>
+        <file>ClockDisplay.qml</file>
     </qresource>
 </RCC>
