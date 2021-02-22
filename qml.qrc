@@ -17,5 +17,7 @@
         <file>SpeedDisplay.qml</file>
         <file>DashboardButton.qml</file>
         <file>ClockDisplay.qml</file>
+        <file>GaugeGroupLabel.qml</file>
+        <file>GaugeGroupLists.qml</file>
     </qresource>
 </RCC>

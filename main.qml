@@ -117,33 +117,26 @@ Window {
             border.color: appDebug ? "#323232" : "transparent"
             Rectangle {
                 id: engineGaugesTextLeft
-                anchors.top: parent.top
-                width: parent.width
-                height: width / 6
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width / 10
+                height: parent.height * 0.75
                 color: "transparent"
-                Text {
-                    text: qsTr("TRANSMISSION")
-                    anchors.centerIn: parent
-                    font.pixelSize: {
-                        if ((parent.height * 0.65) > 0) {
-                            parent.height * 0.65
-                        } else {
-                            1
-                        }
+                opacity: 0.75
+                Repeater {          // gauge labels
+                    id: transmissionLabelRep
+                    model: gaugeGroupLists.transmissionTextList.count
+                    delegate: GaugeGroupLabel {
+                        labelLetter: gaugeGroupLists.transmissionTextList.get(index).le
+                        letterIndex: index
+                        letterCount: transmissionLabelRep.model
                     }
-                    font.bold: true
-                    //font.letterSpacing: parent.width / 20
-                    color: "#fb4f14"
-                    opacity: 0.65
-                    rotation: 0
-                    wrapMode: Text.WordWrap
                 }
             }
 
             RectangularGauge {      // oil Temp gauge
-                //visible: false
                 id: transOilTempGauge
-                //anchors.top: engineGaugesTextLeft.bottom
+                anchors.left: engineGaugesTextLeft.right
                 anchors.bottom: transOilPressureGauge.top
                 gaugeName: "OIL TEMP"
                 gaugeMin: 50; gaugeMax: 130
@@ -165,9 +158,9 @@ Window {
 
             RectangularGauge {      // oil pressure gauge
                 id: transOilPressureGauge
-                //anchors.top: transOilTempGauge.bottom
-                //anchors.topMargin: parent.height * 0.02
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: engineGaugesTextLeft.right
+                //anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.verticalCenter
                 gaugeName: "OIL PRESSURE"
                 gaugeMin: 1; gaugeMax: 7
                 width: parent.width
@@ -188,11 +181,11 @@ Window {
         }
     }
 
-    RearViewMirror {    // floating rear-view mirror
-        width: window.width * 0.31
-        height: width * 0.3
-        visible: true
-    }
+//    RearViewMirror {    // floating rear-view mirror
+//        width: window.width * 0.31
+//        height: width * 0.3
+//        visible: true
+//    }
 
     Rectangle {     // main gauges
         id: mainGauges
@@ -279,30 +272,26 @@ Window {
             border.color: appDebug ? "#323232" : "transparent"
             Rectangle {
                 id: engineGaugesTextRight
-                anchors.top: parent.top
-                width: parent.width
-                height: width / 6
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width / 10
+                height: parent.height * 0.75
                 color: "transparent"
-                Text {
-                    text: qsTr("ENGINE")
-                    anchors.centerIn: parent
-                    font.pixelSize: {
-                        if ((parent.height * 0.65) > 0) {
-                            parent.height * 0.65
-                        } else {
-                            1
-                        }
+                opacity: 0.75
+                Repeater {          // gauge labels
+                    id: engineLabelRep
+                    model: gaugeGroupLists.engineTextList.count
+                    delegate: GaugeGroupLabel {
+                        labelLetter: gaugeGroupLists.engineTextList.get(index).le
+                        letterIndex: index
+                        letterCount: transmissionLabelRep.model
                     }
-                    font.bold: true
-                    //font.letterSpacing: parent.width / 20
-                    color: "#fb4f14"
-                    opacity: 0.65
                 }
             }
 
             RectangularGauge {      // oil Temp gauge
                 id: engineOilTempGauge
-                //anchors.top: engineGaugesTextRight.bottom
+                anchors.right: engineGaugesTextRight.left
                 anchors.bottom: engineOilPressureGauge.top
                 gaugeName: "OIL TEMP"
                 gaugeMin: 50; gaugeMax: 130
@@ -325,8 +314,7 @@ Window {
 
             RectangularGauge {      // oil pressure gauge
                 id: engineOilPressureGauge
-                //anchors.top: engineOilTempGauge.bottom
-                //anchors.topMargin: parent.height * 0.02
+                anchors.right: engineGaugesTextRight.left
                 anchors.verticalCenter: parent.verticalCenter
                 gaugeName: "OIL PRESSURE"
                 gaugeMin: 1; gaugeMax: 7
@@ -349,6 +337,7 @@ Window {
 
             RectangularGauge {      // water Temp gauge
                 id: engineWaterTempGauge
+                anchors.right: engineGaugesTextRight.left
                 anchors.top: engineOilPressureGauge.bottom
                 anchors.topMargin: parent.height * 0.02
                 gaugeName: "WATER TEMP"
@@ -375,38 +364,34 @@ Window {
             id: rangeGaugesRight
             anchors.top: parent.top
             anchors.left: engineGaugesRight.right
-            anchors.leftMargin: width * 0.05
+            anchors.leftMargin: width * 0.2
             height: parent.height
             width: parent.height * 0.5
             color: "transparent"
             border.width: appDebug ? 1 : 0
             border.color: appDebug ? "#323232" : "transparent"
             Rectangle {
-                id: rangeGaugesTextRight
-                anchors.top: parent.top
-                width: parent.width
-                height: width / 6
+                id: fuelGaugesTextRight
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width / 10
+                height: parent.height * 0.75
                 color: "transparent"
-                Text {
-                    text: qsTr("FUEL")
-                    anchors.centerIn: parent
-                    font.pixelSize: {
-                        if ((parent.height * 0.65) > 0) {
-                            parent.height * 0.65
-                        } else {
-                            1
-                        }
+                opacity: 0.75
+                Repeater {          // gauge labels
+                    id: fuelLabelRep
+                    model: gaugeGroupLists.fuelTextList.count
+                    delegate: GaugeGroupLabel {
+                        labelLetter: gaugeGroupLists.fuelTextList.get(index).le
+                        letterIndex: index
+                        letterCount: transmissionLabelRep.model
                     }
-                    font.bold: true
-                    //font.letterSpacing: parent.width / 10
-                    color: "#fb4f14"
-                    opacity: 0.65
                 }
             }
 
             RectangularGauge {      // fuel gauge
                 id: fuelAmountGauge
-                //anchors.top: rangeGaugesTextRight.bottom
+                anchors.right: fuelGaugesTextRight.left
                 anchors.bottom: fuelPressureGauge.top
                 gaugeName: "LITRES"
                 gaugeMin: 0; gaugeMax: 100
@@ -430,9 +415,9 @@ Window {
 
             RectangularGauge {      // fuel pressure gauge
                 id: fuelPressureGauge
-                //anchors.top: fuelAmountGauge.bottom
-                //anchors.topMargin: parent.height * 0.02
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: fuelGaugesTextRight.left
+                //anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.verticalCenter
                 gaugeName: "FUEL PRESSURE"
                 gaugeMin: 1; gaugeMax: 7
                 gaugeDirection: "left"
@@ -477,5 +462,13 @@ Window {
 
     function timeOfDay () {
         return Qt.formatTime(new(Date), "hh:mm:ss.zzz")
+    }
+
+    GaugeGroupLabel {
+
+    }
+
+    GaugeGroupLists {
+        id: gaugeGroupLists
     }
 }

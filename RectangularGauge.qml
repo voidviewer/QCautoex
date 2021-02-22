@@ -91,7 +91,7 @@ Item {
             }
 
             color: "#fb4f14"
-            opacity: 0.65
+            //opacity: 0.65
         }
     }
 }
