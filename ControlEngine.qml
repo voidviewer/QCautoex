@@ -34,6 +34,7 @@ Window {
     }
 
     Rectangle {     // dashboard window controls
+        //visible: false
         id: controls
         color: "transparent"
         border.width: 1
@@ -60,7 +61,6 @@ Window {
                 checked: false
                 anchors.left: windowFrameToggleText.right
                 transform: Scale { xScale: 0.55; yScale: 0.55 }
-                //anchors.verticalCenter: parent.verticalCenter
 
                 onCheckStateChanged: {
                     if (checked) {
@@ -72,9 +72,39 @@ Window {
             }
         }
 
-        Rectangle {     // dashboard window size adjustment
-            anchors.top: windowFrameToggleRectangle.bottom
+        Rectangle {     // gauge border toggle
+            id: gaugeBorderToggleRectangle
+            color: "transparent"
             anchors.topMargin: 2
+            anchors.top: windowFrameToggleRectangle.bottom
+            width: parent.width * 0.95
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: 22
+            Text {
+                id: gaugeBorderToggleText
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Show gadget decorations "
+                color: "#ffffff"
+            }
+            CheckBox {
+                id: gaugeBorderToggle
+                checked: false
+                anchors.left: gaugeBorderToggleText.right
+                transform: Scale { xScale: 0.55; yScale: 0.55 }
+
+                onCheckStateChanged: {
+                    if (checked) {
+                        socket.sendTextMessage("Gb1");
+                    } else {
+                        socket.sendTextMessage("Gb0");
+                    }
+                }
+            }
+        }
+
+        Rectangle {     // dashboard window size adjustment
+            anchors.top: gaugeBorderToggleRectangle.bottom
+            anchors.topMargin: 8
             width: parent.width * 0.95
             anchors.horizontalCenter: parent.horizontalCenter
             Text {

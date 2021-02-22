@@ -71,6 +71,13 @@ Item {
         case "Dm":
             clockGauge.gaugeValue = gaugeValue
             break;
+        case "Gb":
+            if (gaugeValue === "0") {
+                showGadgetDecor = false
+            } else {
+                showGadgetDecor = true
+            }
+            break;
         default:
             break;
         }

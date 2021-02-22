@@ -15,23 +15,31 @@ Item {
         width: parent.width
         height: parent.height
         color: "transparent"
-        border.color: "white"
-        border.width: parent.height * 0.0175
+        //border.color: showGadgetDecor ? "white" : "transparent"
+        //border.width: showGadgetDecor ? parent.height * 0.0175 : 0
         radius: width * 0.5
-        opacity: 0.5
+        //opacity: 0.5
         Rectangle {         // gauge background
+            visible: showGadgetDecor
             anchors.centerIn: parent
             width: parent.width * 0.99
             height: parent.height * 0.99
             radius: width * 0.5
-            color: "#000000"
+            //color: showGadgetDecor ? "#000000" : "transparent"
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#323232" }
+                GradientStop { position: 0.5; color: "#000000" }
+                //GradientStop { position: 0.0; color: showGadgetDecor ? "#323232" : "transparent" }
+                //GradientStop { position: 0.5; color: showGadgetDecor ? "#000000" : "transparent" }
+            }
+            opacity: 0.45
         }
         Rectangle {     // needle
             id: gaugeNeedle
-            height: (gaugeCircle.height / 2) * 0.9
+            height: (gaugeCircle.height / 2) * 0.7
             width: {
-                if (height / 30 >= 1) {
-                    height / 30
+                if (height / 25 >= 1) {
+                    height / 25
                 } else {
                     1
                 }

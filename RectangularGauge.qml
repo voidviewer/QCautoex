@@ -17,16 +17,18 @@ Item {
         width: parent.width
         height: parent.height
         color: "transparent"
-        border.color: "#969696"
-        border.width: parent.height * 0.045
+        //border.color: showGadgetDecor ? "#969696" : "transparent"
+        //border.width: showGadgetDecor ? parent.height * 0.045 : 0
 
-        Rectangle {         // gauge background
-            anchors.centerIn: parent
-            width: parent.width * 0.98
-            height: parent.height * 0.96
-            color: "#000000"
-            opacity: 0.5
-        }
+//        Rectangle {         // gauge background
+//            visible: showGadgetDecor
+//            anchors.centerIn: parent
+//            width: parent.width * 0.98
+//            height: parent.height * 0.96
+//            color: "#000000"
+//            opacity: 0.5
+//        }
+
         Rectangle {     // slider background
             id: gaugeNeedle
             width: parent.height * 0.225
@@ -42,6 +44,7 @@ Item {
                     90
                 }
             }
+            radius: gaugeNeedle.height / 30
 
             Gradient {
                 id: gaugeGradientRight

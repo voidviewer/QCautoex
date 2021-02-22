@@ -12,6 +12,7 @@ Window {
     flags: "FramelessWindowHint"
     maximumWidth: 1920; maximumHeight: 480;
     minimumWidth: 720; minimumHeight: 180
+    color: "#000000"
     visible: true
     onWidthChanged: {
         x = (Screen.width / 2) - (width / 2)
@@ -29,12 +30,14 @@ Window {
     property real revLabelCenterMultiplierX: 0.0
     property real revLabelCenterMultiplierY: 0.0
     property real speedLabelCenterMultiplierX: 0.0
-    property real speedLabelCenterMultiplierY: 0.065
+    property real speedLabelCenterMultiplierY: 0.04
     property bool engineRunning: false
+    property bool showGadgetDecor: false
 
     Image {
         source: "images/background.png"
         anchors.fill: parent
+        //opacity: 1
     }
 
     Rectangle {     // window border
@@ -132,12 +135,16 @@ Window {
                     //font.letterSpacing: parent.width / 20
                     color: "#fb4f14"
                     opacity: 0.65
+                    rotation: 0
+                    wrapMode: Text.WordWrap
                 }
             }
 
             RectangularGauge {      // oil Temp gauge
+                //visible: false
                 id: transOilTempGauge
-                anchors.top: engineGaugesTextLeft.bottom
+                //anchors.top: engineGaugesTextLeft.bottom
+                anchors.bottom: transOilPressureGauge.top
                 gaugeName: "OIL TEMP"
                 gaugeMin: 50; gaugeMax: 130
                 width: parent.width
@@ -158,8 +165,9 @@ Window {
 
             RectangularGauge {      // oil pressure gauge
                 id: transOilPressureGauge
-                anchors.top: transOilTempGauge.bottom
-                anchors.topMargin: parent.height * 0.02
+                //anchors.top: transOilTempGauge.bottom
+                //anchors.topMargin: parent.height * 0.02
+                anchors.verticalCenter: parent.verticalCenter
                 gaugeName: "OIL PRESSURE"
                 gaugeMin: 1; gaugeMax: 7
                 width: parent.width
@@ -286,7 +294,7 @@ Window {
                         }
                     }
                     font.bold: true
-                    font.letterSpacing: parent.width / 20
+                    //font.letterSpacing: parent.width / 20
                     color: "#fb4f14"
                     opacity: 0.65
                 }
@@ -294,7 +302,8 @@ Window {
 
             RectangularGauge {      // oil Temp gauge
                 id: engineOilTempGauge
-                anchors.top: engineGaugesTextRight.bottom
+                //anchors.top: engineGaugesTextRight.bottom
+                anchors.bottom: engineOilPressureGauge.top
                 gaugeName: "OIL TEMP"
                 gaugeMin: 50; gaugeMax: 130
                 gaugeDirection: "left"
@@ -316,8 +325,9 @@ Window {
 
             RectangularGauge {      // oil pressure gauge
                 id: engineOilPressureGauge
-                anchors.top: engineOilTempGauge.bottom
-                anchors.topMargin: parent.height * 0.02
+                //anchors.top: engineOilTempGauge.bottom
+                //anchors.topMargin: parent.height * 0.02
+                anchors.verticalCenter: parent.verticalCenter
                 gaugeName: "OIL PRESSURE"
                 gaugeMin: 1; gaugeMax: 7
                 gaugeDirection: "left"
@@ -365,6 +375,7 @@ Window {
             id: rangeGaugesRight
             anchors.top: parent.top
             anchors.left: engineGaugesRight.right
+            anchors.leftMargin: width * 0.05
             height: parent.height
             width: parent.height * 0.5
             color: "transparent"
@@ -373,7 +384,6 @@ Window {
             Rectangle {
                 id: rangeGaugesTextRight
                 anchors.top: parent.top
-                //anchors.right: 0
                 width: parent.width
                 height: width / 6
                 color: "transparent"
@@ -388,7 +398,7 @@ Window {
                         }
                     }
                     font.bold: true
-                    font.letterSpacing: parent.width / 10
+                    //font.letterSpacing: parent.width / 10
                     color: "#fb4f14"
                     opacity: 0.65
                 }
@@ -396,7 +406,8 @@ Window {
 
             RectangularGauge {      // fuel gauge
                 id: fuelAmountGauge
-                anchors.top: rangeGaugesTextRight.bottom
+                //anchors.top: rangeGaugesTextRight.bottom
+                anchors.bottom: fuelPressureGauge.top
                 gaugeName: "LITRES"
                 gaugeMin: 0; gaugeMax: 100
                 gaugeDirection: "right"
@@ -419,8 +430,9 @@ Window {
 
             RectangularGauge {      // fuel pressure gauge
                 id: fuelPressureGauge
-                anchors.top: fuelAmountGauge.bottom
-                anchors.topMargin: parent.height * 0.02
+                //anchors.top: fuelAmountGauge.bottom
+                //anchors.topMargin: parent.height * 0.02
+                anchors.verticalCenter: parent.verticalCenter
                 gaugeName: "FUEL PRESSURE"
                 gaugeMin: 1; gaugeMax: 7
                 gaugeDirection: "left"
