@@ -79,18 +79,20 @@ Item {
         }
         Text {      // gauge description text
             anchors.centerIn: parent
-            transform: Scale { yScale: 0.75 }
+            transform: Scale { yScale: 0.6 }
             anchors.verticalCenterOffset: parent.height * 0.3
             text: gaugeName
             font.pixelSize: {
-                if ((parent.height * 0.25) > 0) {
-                    parent.height * 0.25
+                if ((parent.height * 0.225) > 0) {
+                    parent.height * 0.225
                 } else {
                     1
                 }
             }
-
-            color: "#fb4f14"
+            //font.weight: Font.Thin
+            //color: "#fb4f14"
+            //color: "#ffffff"
+            color: "#ac9393"
             //opacity: 0.65
         }
     }

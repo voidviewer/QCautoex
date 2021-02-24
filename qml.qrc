@@ -19,5 +19,6 @@
         <file>ClockDisplay.qml</file>
         <file>GaugeGroupLabel.qml</file>
         <file>GaugeGroupLists.qml</file>
+        <file>images/needle.svg</file>
     </qresource>
 </RCC>
