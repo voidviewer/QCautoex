@@ -92,7 +92,7 @@ Item {
             //font.weight: Font.Thin
             //color: "#fb4f14"
             //color: "#ffffff"
-            color: "#ac9393"
+            color: descriptionColor
             //opacity: 0.65
         }
     }

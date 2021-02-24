@@ -21,16 +21,18 @@ Window {
         y = (Screen.height / 2) - (height / 2)
     }
 
-    property bool appDebug: false
+    readonly property bool appDebug: false
+    readonly property int revLabelSize: 7
+    readonly property int speedLabelSize: 14
+    readonly property int sideGaugeLabelSize: 5
+    readonly property real revLabelCenterMultiplierX: 0.0
+    readonly property real revLabelCenterMultiplierY: 0.0
+    readonly property real speedLabelCenterMultiplierX: 0.0
+    readonly property real speedLabelCenterMultiplierY: 0.04
+    readonly property string descriptionColor: "#ac9393"
+
     property real mirrorOpacity: 0.0
     property real rpmValue: 0
-    property int revLabelSize: 7
-    property int speedLabelSize: 14
-    property int sideGaugeLabelSize: 5
-    property real revLabelCenterMultiplierX: 0.0
-    property real revLabelCenterMultiplierY: 0.0
-    property real speedLabelCenterMultiplierX: 0.0
-    property real speedLabelCenterMultiplierY: 0.04
     property bool engineRunning: false
     property bool showGadgetDecor: false
 

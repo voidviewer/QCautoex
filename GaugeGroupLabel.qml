@@ -1,7 +1,7 @@
 import QtQuick 2.0
 
 Rectangle {
-    property string labelLetter: ({})
+    property string labelLetter: ""
     property int letterIndex: 0
     property int letterCount: 1
 
@@ -13,7 +13,7 @@ Rectangle {
         anchors.centerIn: parent
         height: parent.height / letterCount
         text: labelLetter
-        color: "#fb4f14"
+        color: descriptionColor
         font.pixelSize: parent.width
         font.bold: true
     }

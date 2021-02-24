@@ -65,7 +65,7 @@ Item {
                 1
             }
         }
-        color: "#fb4f14"
+        color: descriptionColor
         opacity: 1
     }
 }

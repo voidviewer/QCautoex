@@ -4,8 +4,8 @@
 import QtQuick 2.0
 
 Item {
-    property int buttonHeight: 24
-    property int buttonSpacing: 4
+    readonly property int buttonHeight: 24
+    readonly property int buttonSpacing: 4
 
     property bool startStop: false
     onStartStopChanged: toggleEngine()

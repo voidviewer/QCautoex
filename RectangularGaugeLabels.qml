@@ -9,6 +9,7 @@ Rectangle {
     property int labelNumberSize: 6
     property int labelIndex: 0
     property int labelCount: 5
+
     width: parent.width * 0.9
     height: parent.height * 0.25
     anchors.verticalCenter: parent.verticalCenter

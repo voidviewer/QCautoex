@@ -2,9 +2,9 @@ import QtQuick 2.0
 import QtQml.Models 2.15
 
 Item {
-    property alias transmissionTextList: transmissionTextList
-    property alias engineTextList: engineTextList
-    property alias fuelTextList: fuelTextList
+    readonly property alias transmissionTextList: transmissionTextList
+    readonly property alias engineTextList: engineTextList
+    readonly property alias fuelTextList: fuelTextList
 
     ListModel {
         id: transmissionTextList
